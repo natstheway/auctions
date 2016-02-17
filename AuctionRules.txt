@@ -19,3 +19,17 @@ TEAM COMPOSITION:
 HOW ARE THE PLAYERS AUCTIONED: 
   All players will have a set base price & the player will be released on that price. 
   The teams can start bidding. The team that bids the highest, gets the player.
+
+
+
+BIDDING PROCESS: 
+
+Marquee players have base price of 2C or 4C
+Other players have base prices of 10L, 20L, 50L or 1C.
+
+From 10L till 2C, the bids increase in 10 Lakhs, ie 10 L, 20L, 30 L.... 2C.
+From 2C to 5C, the bids increases in 20 Lakhs, ie 2C, 2.2, 2.4, 2.6...... 5C
+From 5C to 10C, the bids increase in 25 Lakhs, ie 5C, 5.25, 5.5,...10C
+
+Secret bids:
+After 10C, if more than a team is interested in bidding for the player, the player goes to a secret bid. Secret bid here means that the interested teams should personal message me your maximum bid for the player over 10C. Please note, THE MAX SECRET BID THAT CAN BE MESSAGED IS ONLY 15C. 
