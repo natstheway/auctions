@@ -1,0 +1,33 @@
+
+Auction Site :
+	Once the auction site receives the player entry, it is supposed put out a message in the 
+	chat box saying this is the player we are going to bid...
+	Based price is x Crores .. starts the auction... which shud enable the players to be able to send the bids..
+	To make sure no two bids are same, we will just give them a button which says +x amount, 
+	incremental value based on the auction rules...
+	All the players will be able to see the team/user who now has the bid, and the amount he is quoting...
+	
+	
+Player DB :
+
+Name -
+Country -
+type - bat,bowl,all,wk, etc
+auction category - bat, Bo Allrounder, Ba Allrounder, Wk, Marquee
+category - uncappped/ capped indian / foreign etc
+summary - few lines about him... auctioneer will first read the summary ... then the base price ...
+status - sold/unsold
+base price - 
+current bid price - 
+team name- 
+
+
+The team DB can be entirely extracted from player DB ... But if there are any contraints, then we can add team DB also ..
+If there are same data at multiple places, it might be difficult to maintain all of them.. better to have a single Player DB,
+and extract the team from that ...updating is easier...extraction might take some computation i.e. filtering players based on team name
+
+Following data need to be filtered out based on the teams : 
+Team Members list with price : [array of player names and corresponding price]
+Total Purse Spent
+No of wk, No of bat, No of bowl, No All rounder - to check if squad is adhering to conditions
+
