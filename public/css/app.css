@@ -15,26 +15,35 @@
   	width: 30%;
   }
   div#main {
+    width: 100%;
+    min-height: 100px;
+  }
+  div#bid {
   	border: 1px solid black;
   	width: 30%;
+    float: left;
+    margin-right: 5px;
   }
   div#list {
   	width: 69%;
-  	float: right;
+  	float: left;
   }
   div#list span {
   	border: 1px solid black;
-  	min-width: 20%;
+  	min-width: 15%;
   	min-height: 30px;
-  	display: inline-block; 
+  	display: block; 
+    text-align: center;
+    float: left;
+    margin: 0;
   }
   div input {
   	border: 0;
   	padding: 10px;
-  	width: 90%;
+  	width: 85%;
   	margin-right: .5%;
   }
-  div button { width: 9%;
+  div button { width: 14%;
   	background: rgb(130, 224, 255);
   	border: none;
   	padding: 10px;
