@@ -11,12 +11,17 @@
 </head>
 <body ng-app="app">
 	<div id="main" ng-controller="MainController">
-		<div>
+		<div ng-show="!registered">
+			<input ng-model="userName" placeholder="{{registrationRequest}}"/>
+			<button ng-click="register()"> Register </button>
+		</div>
+		<div ng-show="registered">
 			<h3>Player on Offer</h3>
 			<p>Name : {{currentPlayer.name}}</p>
 			<p>Base Price : {{currentPlayer.basePrice}}</p>
-			<p>Current Price : {{currentPlayer.currentPrice}}</p>
-			<p>Team : {{currentPlayer.team}}</p>
+		</div>
+		<div ng-show="registered">
+			<h1 ng-model="clock">{{clock}}</h1>
 		</div>
 	</div>
 	<div id="bid" ng-controller="BidController">
@@ -26,11 +31,20 @@
 	    </div>
 	</div>
 	<div id="list" ng-controller="ListController">
-		<span>Name</span>
-		<span>Base Price</span>
-		<span>Current Price</span>
-		<span>Team</span>
-		<span>Status</span>
+		<div id="ListTitle">
+			<span>Name</span>
+			<span>Base Price</span>
+			<span>Current Price</span>
+			<span>Team</span>
+			<span>Status</span>
+		</div>
+		<div ng-repeat="player in playerList">
+			<span>{{player.name}}</span>
+			<span>{{player.basePrice}}</span>
+			<span>{{player.currentPrice}}</span>
+			<span>{{player.team}}</span>
+			<span>{{player.status}}</span>
+		</div>
 	</div>
 </body>
 </html>
