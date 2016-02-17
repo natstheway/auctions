@@ -31,25 +31,35 @@ var setExpiration = function () {
       playerList = null;      
     }
   }, 30 * 1000);  
-}
+};
+var startAuction = function (socket, name) {
+  socket.on('bid message', function(msg){
+    io.emit('bid message', name + ":" + msg);
+    playerList[currentPlayerIndex].currentPrice = msg;
+    playerList[currentPlayerIndex].team = name;
+    io.emit('player update', playerList[currentPlayerIndex]);
+    io.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
+    io.emit("Timer Start", 30);
+    setExpiration(io);
+  });
+  if (!playerList || !playerList.length) {
+    playerList = players.getAllPlayers();
+    currentPlayerIndex = 0;
+  }
+  socket.emit("Current Player", playerList[currentPlayerIndex]);
+  socket.emit("Timer Start", 30);
+  setExpiration(io);
+};
 io.on('connection', function(socket){
   socket.on('Registration', function (name) {
     io.emit('bid message', name + ' : connected');
     socket.on('disconnect', function(){
       io.emit('bid message', name + ' : disconnected');
     });
-    socket.on('bid message', function(msg){
-      io.emit('bid message', name + ":" + msg);
-      playerList[currentPlayerIndex].currentPrice = msg;
-      playerList[currentPlayerIndex].team = name;
-      io.emit('player update', playerList[currentPlayerIndex]);
-      io.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
-      io.emit("Timer Start", 30);
-      setExpiration(io);
-    });
-    io.emit("Current Player", playerList[currentPlayerIndex]);
-    io.emit("Timer Start", 30);
-    setExpiration(io);
+    socket.on('start auction', function () {
+      startAuction(socket, name);
+      io.emit('bid message', name + " joined the auction");
+    });    
   });
   io.emit("Register", "Please provide your name");
 });

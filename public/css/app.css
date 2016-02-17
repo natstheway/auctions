@@ -18,8 +18,16 @@
     width: 100%;
     min-height: 100px;
   }
+  div#main div:first-child {
+    margin-top: 30%;
+    margin-left: 10%;
+  }
+  div#clock, div#current {
+    float: left;
+    margin-left: 30%;
+  }
   div#bid {
-  	border: 1px solid black;
+  	/*border: 1px solid black;*/
   	width: 30%;
     float: left;
     margin-right: 5px;
@@ -44,13 +52,14 @@
   div input {
   	border: 1px solid rgb(130, 224, 255);
   	padding: 10px;
-  	width: 85%;
+  	width: 45%;
   	margin-right: .5%;
   }
-  div button { width: 14%;
+  div button { width: 45%;
   	background: rgb(130, 224, 255);
   	border: none;
   	padding: 10px;
+    color: white;
   }
   #messages {
   	list-style-type: none;

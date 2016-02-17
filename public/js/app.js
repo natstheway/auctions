@@ -27,14 +27,19 @@ angular.module('app', ['socketFactory'])
 	});
 	$scope.register = function () {
 		$socket.$emit('Registration', $scope.userName);
-		$scope.registered = true;
+		$scope.$parent.registered = true;
 	}
 }])
 .controller('BidController', ['$scope', 'socket', function ($scope, $socket) {
+	$scope.moneyLeft = 1000;
 	$scope.makeBid = function () {
 		$socket.$emit('bid message', $scope.currentBid);
 		$scope.currentBid = "";
 		return false;
+	};
+	$scope.startAuction = function () {
+		$socket.$emit('start auction');		
+		$scope.started = true;
 	};
 	$socket.$on('bid message', function (msg) {
 		$('#messages').append($('<li>').text(msg));
