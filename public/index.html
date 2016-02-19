@@ -12,15 +12,18 @@
 <body ng-app="app">
 	<div id="main" ng-controller="MainController">
 		<div ng-show="!registered">
-			<input ng-model="userName" placeholder="{{registrationRequest}}"/>
+			<input ng-model="userName" placeholder="{{registrationRequest}}"/></br>
 			<button ng-click="register()"> Register </button>
 		</div>
-		<div ng-show="registered" id="current">
+		<div ng-if="currentPlayer" ng-show="registered" id="current">
 			<h3>Player on Offer</h3>
-			<p>Name : {{currentPlayer.name}}</p>
-			<p>Base Price : {{currentPlayer.basePrice}}</p>
+			<img ng-src="./images/players/{{currentPlayer.id}}.jpg">
+			<div>
+				<p>Name : {{currentPlayer.name}}</p>
+				<p>Base Price : {{currentPlayer.basePrice}}</p>
+			</div>
 		</div>
-		<div ng-show="registered" id="clock">
+		<div ng-if="currentPlayer" ng-show="registered" id="clock">
 			<h1 ng-model="clock">{{clock}}</h1>
 		</div>
 	</div>

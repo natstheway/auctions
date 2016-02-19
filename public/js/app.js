@@ -4,6 +4,9 @@ angular.module('app', ['socketFactory'])
 	$socket.$on('Current Player', function (msg) {
 		if (!$scope.currentPlayer || $scope.currentPlayer.name !== msg.name) {
 			$scope.playerList.push(msg);
+			if ($scope.started){
+				$('#messages').children().remove();
+			}
 		}
 		$scope.currentPlayer = msg;
 		$scope.$parent.currentBid = msg.currentPrice || msg.basePrice;
@@ -41,10 +44,11 @@ angular.module('app', ['socketFactory'])
 	};
 	$scope.startAuction = function () {
 		$socket.$emit('start auction');		
-		$scope.started = true;
+		$scope.$parent.started = true;
 	};
 	$socket.$on('bid message', function (msg) {
 		$('#messages').append($('<li>').text(msg));
+		$('#messages').animate({scrollTop: $('#messages').height()}, 500);
 	});
 	$socket.$on('bid update', function (bid) {
 		$scope.currentBid = bid;
