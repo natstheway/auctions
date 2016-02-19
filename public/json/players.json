@@ -4,34 +4,49 @@
 		"basePrice": "200",
 		"currentPrice": "NA",
 		"team": "NA",
-		"status": "unsold"
+		"status": "unsold",
+		"summary": "Lets welcome Thala ! The most successful captain of the Indian cricket and the IPL !!! All yours .. starting with Base Price of 2C !! Adichukonga !!! :P",
+		"category": "wk",
+		"type": "marquee"
 	},
 	{
 		"name": "Ashwin",
 		"basePrice": "200",
 		"currentPrice": "NA",
 		"team": "NA",
-		"status": "unsold"
+		"status": "unsold",
+		"summary": "Welcome Mr. R Ashwin ... Best spinner to have in your team !!! He is all yours now .. starting from the Base Price of 2C !! Let start the bidding war ... ",
+		"category": "Bowler",
+		"type": "marquee"
 	},
 	{
 		"name": "Raina",
 		"basePrice": "200",
 		"currentPrice": "NA",
 		"team": "NA",
-		"status": "unsold"
+		"status": "unsold",
+		"summary": "Lets welcome the chinna thalapathy Raina ! The IPL Legend can be all yours now.. starting from the Base Price of 2C !! Its now or never.... Have a go !",
+		"category": "Batsmen",
+		"type": "marquee"
 	},
 	{
 		"name": "Kohli",
 		"basePrice": "200",
 		"currentPrice": "NA",
 		"team": "NA",
-		"status": "unsold"
+		"status": "unsold",
+		"summary": "Lets welcome the most exciting player of the auction .. The man of steel, The Run Machine - Mr Kohli !!! All yours .. starting with Base Price of 2C !! Adichukonga !!!! ",
+		"category": "Batsmen",
+		"type": "marquee"
 	},
 	{
 		"name": "Yuvraj",
 		"basePrice": "200",
 		"currentPrice": "NA",
 		"team": "NA",
-		"status": "unsold"
+		"status": "unsold",
+		"summary": "Lets welcome the most exciting player of the auction !!! All yours .. starting with Base Price of 2C !! Adichukonga !!! :P",
+		"category": "AllRounder",
+		"type": "marquee"
 	}
 ]
