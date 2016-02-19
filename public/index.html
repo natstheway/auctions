@@ -44,7 +44,7 @@
 			<span>Team</span>
 			<span>Status</span>
 		</div>
-		<div ng-repeat="player in playerList">
+		<div ng-repeat="player in playerList | reverse">
 			<span>{{player.name}}</span>
 			<span>{{player.basePrice}}</span>
 			<span>{{player.currentPrice}}</span>

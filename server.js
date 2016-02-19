@@ -33,14 +33,14 @@ var setExpiration = function () {
       setExpiration(io);
     } else {
       playerList.splice(0, playerList.length);
-      playerList = null;      
+      playerList = [];      
     }
   }
   }, initial_timer_expiry * 1000);  
 };
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
-      if(client.length == AUCTION_SIZE) {    // starting the auction and showing the first player only after everyone joins
+      if(client.length == AUCTION_SIZE && playerList.length) {    // starting the auction and showing the first player only after everyone joins
         socket.emit('bid message', name + ":" + msg);
         socket.broadcast.emit('bid message', name + ":" + msg);
         playerList[currentPlayerIndex].currentPrice = msg;

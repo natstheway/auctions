@@ -60,4 +60,8 @@ angular.module('app', ['socketFactory'])
 		$scope.playerList.pop();
 		$scope.playerList.push(data);
 	});
-}]);
+}]).filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});;
