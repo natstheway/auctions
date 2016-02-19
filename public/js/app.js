@@ -2,8 +2,10 @@ angular.module('app', ['socketFactory'])
 .controller('MainController', ['$scope', 'socket', '$interval', function ($scope, $socket, $interval) {
 	$scope.timer = null;
 	$socket.$on('Current Player', function (msg) {
+		if (!$scope.currentPlayer || $scope.currentPlayer.name !== msg.name) {
+			$scope.playerList.push(msg);
+		}
 		$scope.currentPlayer = msg;
-		$scope.playerList.push(msg);
 		$scope.$parent.currentBid = msg.currentPrice || msg.basePrice;
 	});
 	$socket.$on('Register', function (msg) {

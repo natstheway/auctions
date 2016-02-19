@@ -6,7 +6,12 @@
   }
   body {
   	font: 13px Helvetica, Arial;
+    opacity: 0.6;
+    background-image: url('../images/bg.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
   }
+
   div#form {
   	/*background: #000;*/
   	padding: 3px;

@@ -59,12 +59,10 @@ var startAuction = function (socket, name) {
       currentPlayerIndex = 0;
     }  
     if(client.length == AUCTION_SIZE) {
-      socket.emit("Current Player", playerList[currentPlayerIndex]);
-      socket.emit("Timer Start", initial_timer_expiry);
-      socket.broadcast.emit("Timer Start", initial_timer_expiry);
+      io.emit("Current Player", playerList[currentPlayerIndex]);
+      io.emit("Timer Start", initial_timer_expiry);
       setExpiration(socket);
-    }
-  
+    }  
  };
 io.on('connection', function(socket){
   socket.on('Registration', function (name) {
