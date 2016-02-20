@@ -42,13 +42,12 @@ function getClientObj(name) {
 // updating user ( client ) profile after purchase
 function clientPurchaseUpdate(name,team,currentPrice) {
   var tempUser = getObjects(client,"name", team);
-  var newpurseBalance = parseInt(tempUser.purseBalance,10) - currentPrice;
-  var newpurchasecount = parseInt(tempUser.playersPurschasedCount,10) + 1;
-  tempUser.purseBalance = newpurseBalance;
-  tempUser.playersPurschasedCount = newpurchasecount;
-  console.log(team + " purschased "+ name + " for " + currentPrice + " Lakhs");
-  console.log("purseBalance of " + team+ " is " + tempUser.purseBalance + " Lakhs");
-  console.log(team + " has purschased "+tempUser.playersPurschasedCount +" players" );
+  tempUser[0].purseBalance -= currentPrice;
+  tempUser[0].playersPurschasedCount++;
+  // logging - can be removed
+  console.log(tempUser[0].name + " purschased "+ name + " for " + currentPrice + " Lakhs");
+  console.log("purseBalance of " + team+ " is " + tempUser[0].purseBalance + " Lakhs");
+  console.log(tempUser[0].name + " has purschased "+tempUser[0].playersPurschasedCount +" players" );
 }
 var setExpiration = function () {
   clearTimeout(timer);
