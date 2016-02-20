@@ -7,7 +7,7 @@
 4. Money Spent
 5. Online Team list
 6. Disable Repeated Bids
-7. 5 sec break between bids 
+7. 5 sec break between bids - DONE
 
 ##### Code Cleanups #####
 
