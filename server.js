@@ -8,10 +8,11 @@ app.use(express.static('public'));
 var playerList = players.getAllPlayers();
 var currentPlayerIndex = 0;
 var timer = null;
-var initial_timer_expiry = 30;
-var extension_timer = 10;
 var client = [];    // variable to store all the users logged in .. the list is updated when some one is disconnected
 var AUCTION_SIZE = 3;  // number of players to be in the auction group ..can be changed here..
+var AUCTION_TIME_LIMIT = 15000; // 15 seconds
+var PLAYER_BID_GAP = 5000; // 5 seconds
+
 var setExpiration = function () {
   clearTimeout(timer);
   timer = setTimeout(function () {
@@ -25,18 +26,21 @@ var setExpiration = function () {
       io.emit('bid message',  playerList[currentPlayerIndex].name + ' is unsold');
     }
     io.emit('player update', playerList[currentPlayerIndex]);
+    // Here a player bid is done ..give a 5 seconds gap !!!
+    timer_auction_gap = setTimeout(function () {
     if (currentPlayerIndex < playerList.length - 1) {
       currentPlayerIndex = currentPlayerIndex + 1;
       io.emit("Current Player", playerList[currentPlayerIndex]);
       io.emit('bid update', playerList[currentPlayerIndex].basePrice);
-      io.emit("Timer Start", initial_timer_expiry);
+      io.emit("Timer Start", AUCTION_TIME_LIMIT);
       setExpiration(io);
     } else {
       playerList.splice(0, playerList.length);
       playerList = [];      
     }
+  },PLAYER_BID_GAP);
   }
-  }, initial_timer_expiry * 1000);  
+  }, AUCTION_TIME_LIMIT);  
 };
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
@@ -47,10 +51,10 @@ var startAuction = function (socket, name) {
         playerList[currentPlayerIndex].team = name;
         socket.emit('player update', playerList[currentPlayerIndex]);
         socket.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
-        socket.emit("Timer Start", initial_timer_expiry);
+        socket.emit("Timer Start", AUCTION_TIME_LIMIT);
         socket.broadcast.emit('player update', playerList[currentPlayerIndex]);
         socket.broadcast.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
-        socket.broadcast.emit("Timer Start", initial_timer_expiry);
+        socket.broadcast.emit("Timer Start", AUCTION_TIME_LIMIT);
         setExpiration(socket);
       }      
     });
@@ -60,7 +64,7 @@ var startAuction = function (socket, name) {
     }  
     if(client.length == AUCTION_SIZE) {
       io.emit("Current Player", playerList[currentPlayerIndex]);
-      io.emit("Timer Start", initial_timer_expiry);
+      io.emit("Timer Start", AUCTION_TIME_LIMIT);
       setExpiration(socket);
     }  
  };
