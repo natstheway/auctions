@@ -47,6 +47,10 @@ angular.module('app', ['socketFactory'])
 		$scope.chatText = "";
 		return false;
 	};
+	$scope.waitees = function () {
+		$socket.$emit('waitees message', $scope.userName);
+		return false;
+	};
 	$scope.startAuction = function () {
 		$socket.$emit('start auction');		
 		$scope.$parent.started = true;

@@ -18,7 +18,7 @@
 		    <div id="form" action="" ng-show="started">
 		    	<input ng-model="chatText" required/>
 		    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
-		    	<button>Waitees!!</button>
+		    	<button ng-click="waitees()">Waitees!!</button>
 		    	<button ng-click="makeBid()">Bid {{currentBid}}</button>
 		    	<input id="m" ng-model= "purseBalance" disabled/>
 		    </div>

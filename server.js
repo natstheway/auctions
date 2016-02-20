@@ -44,9 +44,9 @@ function clientPurchaseUpdate(name, team, currentPrice) {
   tempUser.purseBalance = tempUser.purseBalance - currentPrice;
   tempUser.playersPurschasedCount = tempUser.playersPurschasedCount + 1;
   console.log(JSON.stringify(tempUser));
-  console.log(team + " purschased "+ name + " for " + currentPrice + " Lakhs");
-  console.log("purseBalance of " + team + " is " + tempUser.purseBalance + " Lakhs");
-  console.log(team + " has purschased "+tempUser.playersPurschasedCount +" players" );
+  /**
+   * Need to define message interfaces and layout in ui to display this information
+  **/
   clientSockets[team].emit("purse balance", tempUser.purseBalance);
   return tempUser;
 }
@@ -84,21 +84,30 @@ var setExpiration = function () {
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
       if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team) {    // starting the auction and showing the first player only after everyone joins
-        socket.emit('bid message', name + ":" + msg);
-        socket.broadcast.emit('bid message', name + ":" + msg);
+        io.emit('bid message', name + ":" + msg);
         playerList[currentPlayerIndex].currentPrice = msg;
         playerList[currentPlayerIndex].team = name;
-        socket.emit('player update', playerList[currentPlayerIndex]);
-        socket.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
-        socket.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
-        socket.broadcast.emit('player update', playerList[currentPlayerIndex]);
-        socket.broadcast.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
-        socket.broadcast.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
+        /**
+         * use socket.emit to reply to same user 
+         * use socket.broadcast.emit to reply to other users (apart from sent)
+         * use io.emit to send to everyone
+        **/
+        io.emit('player update', playerList[currentPlayerIndex]);
+        io.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
+        io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
         setExpiration();
       }      
     });
     socket.on('chat message', function(msg){
       io.emit('chat message', name + ":" + msg);
+    });
+    socket.on('waitees message', function(msg){
+      /**
+       * Currently No limitaions on waitees... resets the timer to AUCTION_TIME_LIMIT_SEC
+      **/
+      io.emit('bid message', name + ": requested waitees!!!");
+      io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
+      setExpiration();
     });
     if (!playerList || !playerList.length) {
       playerList = players.getAllPlayers();
@@ -112,20 +121,19 @@ var startAuction = function (socket, name) {
  };
 io.on('connection', function(socket){
   socket.on('Registration', function (name) {
-    socket.emit('bid message', name + ' : connected');
+    io.emit('bid message', name + ' : connected');
     client.push(getClientObj(name));
     clientSockets[name] = socket;
     socket.emit("purse balance", MAX_PURSE_AMOUNT);
     socket.on('disconnect', function(){
-      socket.emit('bid message', name + ' : disconnected');
-      socket.broadcast.emit('bid message', name + ' : disconnected');
+      io.emit('bid message', name + ' : disconnected');
       client.splice(client.indexOf(getObjects(client, "name", name)), 1);
       clientSockets[name] = null;
       delete clientSockets[name];
     });
     socket.on('start auction', function () {
       startAuction(socket, name); // start auction for all here ...
-      socket.emit('bid message', name + " joined the auction");
+      io.emit('bid message', name + " joined the auction");
     });    
   });
   socket.emit("Register", "Please provide your name");
