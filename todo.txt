@@ -1,12 +1,12 @@
 ### TO-DO ####
 
-#### Featues #######
+#### Features #######
 1. Page Layout with Player Summary, Category and Type
 2. Chat Support
 3. Waitees
-4. Money Spent
-5. Online Team list
-6. Disable Repeated Bids
+4. Money Spent - Partially complete server code
+5. Online Team list - Data available in the server code
+6. Disable Repeated Bids - DONE
 7. 5 sec break between bids - DONE
 8. "Adaptive Bidding mode" support for bidding -
       where a player can select a max value upto which the system should bid.
@@ -17,5 +17,9 @@
 
 1. Modules in server.js
 2. UI code clean up
+
+
+##### UI looks update 
+Sold players list like a ticker. Sample code below ( http://codepen.io/gabrieleromanato/pen/IoDBy )
 
 
