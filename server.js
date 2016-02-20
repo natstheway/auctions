@@ -8,11 +8,48 @@ app.use(express.static('public'));
 var playerList = players.getAllPlayers();
 var currentPlayerIndex = 0;
 var timer = null;
-var client = [];    // variable to store all the users logged in .. the list is updated when some one is disconnected
+var client = [];   // variable to store all the users logged in .. the list is updated when some one is disconnected
 var AUCTION_SIZE = 3;  // number of players to be in the auction group ..can be changed here..
 var AUCTION_TIME_LIMIT = 15000; // 15 seconds
+var AUCTION_TIME_LIMIT_SEC = 15; // 15 seconds
 var PLAYER_BID_GAP = 5000; // 5 seconds
+var MAX_PURSE_AMOUNT = 6000; // 6000 Lakhs
 
+// finding objects by key value pair in JSON
+function getObjects(obj, key, val) {
+    var objects = [];
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            objects = objects.concat(getObjects(obj[i], key, val));
+        } else if (i == key && obj[key] == val) {
+            objects.push(obj);
+        }
+    }
+    return objects;
+}
+// User Profile Init
+function getClientObj(name) {
+    return [
+    {
+      "name": name,
+      "purseBalance": MAX_PURSE_AMOUNT,
+      "playersPurschasedCount": 0,
+      "biddingMode": "manual"
+    }
+    ];
+}
+// updating user ( client ) profile after purchase
+function clientPurchaseUpdate(name,team,currentPrice) {
+  var tempUser = getObjects(client,"name", team);
+  var newpurseBalance = parseInt(tempUser.purseBalance,10) - currentPrice;
+  var newpurchasecount = parseInt(tempUser.playersPurschasedCount,10) + 1;
+  tempUser.purseBalance = newpurseBalance;
+  tempUser.playersPurschasedCount = newpurchasecount;
+  console.log(team + " purschased "+ name + " for " + currentPrice + " Lakhs");
+  console.log("purseBalance of " + team+ " is " + tempUser.purseBalance + " Lakhs");
+  console.log(team + " has purschased "+tempUser.playersPurschasedCount +" players" );
+}
 var setExpiration = function () {
   clearTimeout(timer);
   timer = setTimeout(function () {
@@ -21,6 +58,8 @@ var setExpiration = function () {
     if (playerList[currentPlayerIndex].team) {
        playerList[currentPlayerIndex].status = "sold";
        io.emit('bid message',  playerList[currentPlayerIndex].name + ' sold to ' + playerList[currentPlayerIndex].team);
+        // Updating the user purse balance, players purschased count
+        clientPurchaseUpdate(playerList[currentPlayerIndex].name,playerList[currentPlayerIndex].team,playerList[currentPlayerIndex].currentPrice);
     } else {
       playerList[currentPlayerIndex].status = "unsold";
       io.emit('bid message',  playerList[currentPlayerIndex].name + ' is unsold');
@@ -32,7 +71,7 @@ var setExpiration = function () {
       currentPlayerIndex = currentPlayerIndex + 1;
       io.emit("Current Player", playerList[currentPlayerIndex]);
       io.emit('bid update', playerList[currentPlayerIndex].basePrice);
-      io.emit("Timer Start", AUCTION_TIME_LIMIT);
+      io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
       setExpiration(io);
     } else {
       playerList.splice(0, playerList.length);
@@ -51,10 +90,10 @@ var startAuction = function (socket, name) {
         playerList[currentPlayerIndex].team = name;
         socket.emit('player update', playerList[currentPlayerIndex]);
         socket.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
-        socket.emit("Timer Start", AUCTION_TIME_LIMIT);
+        socket.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
         socket.broadcast.emit('player update', playerList[currentPlayerIndex]);
         socket.broadcast.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
-        socket.broadcast.emit("Timer Start", AUCTION_TIME_LIMIT);
+        socket.broadcast.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
         setExpiration(socket);
       }      
     });
@@ -64,18 +103,18 @@ var startAuction = function (socket, name) {
     }  
     if(client.length == AUCTION_SIZE) {
       io.emit("Current Player", playerList[currentPlayerIndex]);
-      io.emit("Timer Start", AUCTION_TIME_LIMIT);
+      io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
       setExpiration(socket);
     }  
  };
 io.on('connection', function(socket){
   socket.on('Registration', function (name) {
     socket.emit('bid message', name + ' : connected');
-    client.push(name);
+    client.push(getClientObj(name));
     socket.on('disconnect', function(){
       socket.emit('bid message', name + ' : disconnected');
       socket.broadcast.emit('bid message', name + ' : disconnected');
-      client.splice(client.indexOf(name), 1);
+      client.splice(client.indexOf(getObjects(client,"name",name)), 1);
     });
     socket.on('start auction', function () {
       startAuction(socket, name); // start auction for all here ...
