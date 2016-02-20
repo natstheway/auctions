@@ -83,7 +83,7 @@ var setExpiration = function () {
 };
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
-      if(client.length == AUCTION_SIZE && playerList.length) {    // starting the auction and showing the first player only after everyone joins
+      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team) {    // starting the auction and showing the first player only after everyone joins
         socket.emit('bid message', name + ":" + msg);
         socket.broadcast.emit('bid message', name + ":" + msg);
         playerList[currentPlayerIndex].currentPrice = msg;
