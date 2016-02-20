@@ -1,25 +1,28 @@
 ### TO-DO ####
 
 #### Features #######
-1. Page Layout with Player Summary, Category and Type
-2. Chat Support - DONE
-3. Waitees - DONE
-4. Money Spent - DONE
-5. Online Team list - Data available in the server code
-6. Disable Repeated Bids - DONE
-7. 5 sec break between bids - DONE
-8. "Adaptive Bidding mode" support for bidding -
+1. Online Team list - 
+	Data available in the server code.. Need to see where to put in the UI...
+		
+2. Page Layout with Player related details, Auction Feeds , and others based on Layout.jpeg
+	The layout.jpg has been updated..
+
+3. "Adaptive Bidding mode" support for bidding -
       where a player can select a max value upto which the system should bid for him.
       The system will be able to adapt and buy the player at a upto the price he quoted
       if the value goes above his quote, then user has to take control and start manual bidding
-      
+
+
+Features completed :
+1. Chat Support - DONE
+2. Waitees - DONE
+3. Money Spent - DONE
+4. Disable Repeated Bids - DONE
+5. 5 sec break between bids - DONE
+
+
 ##### Code Cleanups #####
 
 1. Modules in server.js
 2. UI code clean up
-
-
-##### UI looks update 
-Sold players list like a ticker. Sample code below link - http://codepen.io/gabrieleromanato/pen/IoDBy 
-
 
