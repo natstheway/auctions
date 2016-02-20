@@ -2,9 +2,9 @@
 
 #### Features #######
 1. Page Layout with Player Summary, Category and Type
-2. Chat Support
-3. Waitees
-4. Money Spent - Partially complete server code
+2. Chat Support - DONE
+3. Waitees - DONE
+4. Money Spent - DONE
 5. Online Team list - Data available in the server code
 6. Disable Repeated Bids - DONE
 7. 5 sec break between bids - DONE
