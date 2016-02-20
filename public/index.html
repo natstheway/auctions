@@ -11,46 +11,56 @@
 	<script type="text/javascript" src="./js/app.js"></script>
 </head>
 <body ng-app="app">
-	<div id="main" ng-controller="MainController">
-		<div ng-show="!registered">
-			<input ng-model="userName" placeholder="{{registrationRequest}}"/></br>
-			<button ng-click="register()"> Register </button>
-		</div>
-		<div ng-if="currentPlayer" ng-show="registered" id="current">
-			<h3>Player on Offer</h3>
-			<img ng-src="./images/players/{{currentPlayer.id}}.jpg">
-			<div>
-				<p>Name : {{currentPlayer.name}}</p>
-				<p>Base Price : {{currentPlayer.basePrice}}</p>
+	<div id="LeftZone">
+		<div id="bid" ng-controller="BidController">
+			<ul id="messages"></ul>
+		    <div id="form" action="" ng-show="started">
+		    	<input/>
+		    	<button>Chat</button>
+		    	<button>Waitees!!</button>
+		    	<button ng-click="makeBid()">Bid {{currentBid}}</button>
+		    	<input id="m" ng-model= "purseBalance" disabled/>
+		    </div>
+		    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
+		</div>		
+	</div>
+	<div id="RightZone">
+		<div id="main" ng-controller="MainController">
+			<div ng-show="!registered">
+				<input ng-model="userName" placeholder="{{registrationRequest}}"/></br>
+				<button ng-click="register()"> Register </button>
+			</div>
+			<div id="Display" ng-show="registered">				
+				<div ng-if="currentPlayer" id="clock">
+					<h3>Current Bid</h3>
+					<h1 ng-model="clock">{{clock}}</h1>
+				</div>
+				<div ng-if="currentPlayer" id="current">
+					<h3>Player</h3>
+					<img ng-src="./images/players/{{currentPlayer.id}}.jpg">
+					<div>
+						<p>Name : {{currentPlayer.name}}</p>
+						<p>Base Price : {{currentPlayer.basePrice}}</p>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div ng-if="currentPlayer" ng-show="registered" id="clock">
-			<h1 ng-model="clock">{{clock}}</h1>
-		</div>
-	</div>
-	<div id="bid" ng-controller="BidController">
-		<ul id="messages"></ul>
-	    <div id="form" action="" ng-show="started">
-	      <input id="m" ng-model= "purseBalance" disabled/>
-	      <button ng-click="makeBid()">Bid {{currentBid}}</button>
-	    </div>	    
-	      <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
-	</div>
-	<div id="list" ng-controller="ListController" ng-show="registered">
-		<div id="ListTitle">
-			<span>Name</span>
-			<span>Base Price</span>
-			<span>Current Price</span>
-			<span>Team</span>
-			<span>Status</span>
-		</div>
-		<div ng-repeat="player in playerList | reverse">
-			<span>{{player.name}}</span>
-			<span>{{player.basePrice}}</span>
-			<span>{{player.currentPrice}}</span>
-			<span>{{player.team}}</span>
-			<span>{{player.status}}</span>
-		</div>
+		<div id="list" ng-controller="ListController" ng-show="registered">
+			<div id="ListTitle">
+				<span>Name</span>
+				<span>Base Price</span>
+				<span>Current Price</span>
+				<span>Team</span>
+				<span>Status</span>
+			</div>
+			<div ng-repeat="player in playerList | reverse">
+				<span>{{player.name}}</span>
+				<span>{{player.basePrice}}</span>
+				<span>{{player.currentPrice}}</span>
+				<span>{{player.team}}</span>
+				<span>{{player.status}}</span>
+			</div>
+		</div>	
 	</div>
 </body>
 </html>
