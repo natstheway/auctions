@@ -13,8 +13,11 @@ var clientSockets = {};
 var AUCTION_SIZE = 3;  // number of players to be in the auction group ..can be changed here..
 var AUCTION_TIME_LIMIT = 15000; // 15 seconds
 var AUCTION_TIME_LIMIT_SEC = 15; // 15 seconds
+var WAITEES_TIME_LIMIT = 30000; // 30 seconds
+var WAITEES_TIME_LIMIT_SEC = 30; // seconds
 var PLAYER_BID_GAP = 5000; // 5 seconds
 var MAX_PURSE_AMOUNT = 6000; // 6000 Lakhs
+var MAX_WAITEES_PER_USER = 2; // maximum waitees that can be used up by the user
 
 // finding objects by key value pair in JSON
 function getObjects(obj, key, val) {
@@ -35,6 +38,7 @@ function getClientObj(name) {
         "name": name,
         "purseBalance": MAX_PURSE_AMOUNT,
         "playersPurschasedCount": 0,
+        "waiteesAvailable": MAX_WAITEES_PER_USER,
         "biddingMode": "manual"
       };
 }
@@ -50,7 +54,20 @@ function clientPurchaseUpdate(name, team, currentPrice) {
   clientSockets[team].emit("purse balance", tempUser.purseBalance);
   return tempUser;
 }
-var setExpiration = function () {
+// updating user profile - waitees available
+function deductWaiteesAvailable(name) {
+  var tempUser = getObjects(client,"name", name)[0];
+  tempUser.waiteesAvailable = tempUser.waiteesAvailable - 1;
+}
+// getting user profile - waitees available
+function getWaiteesAvailable(name) {
+  var tempUser = getObjects(client,"name", name)[0];
+  /**
+   * Need to define message interfaces and layout in ui to display this information
+  **/
+  return tempUser.waiteesAvailable;
+}
+var setExpiration = function (timeout) {
   clearTimeout(timer);
   timer = setTimeout(function () {
     if(client.length == AUCTION_SIZE) {  // setting timers only when all the participants are in !!
@@ -72,14 +89,14 @@ var setExpiration = function () {
           io.emit("Current Player", playerList[currentPlayerIndex]);
           io.emit('bid update', playerList[currentPlayerIndex].basePrice);
           io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
-          setExpiration();
+          setExpiration(AUCTION_TIME_LIMIT);
         } else {
           playerList.splice(0, playerList.length);
           playerList = [];      
         }
       }, PLAYER_BID_GAP);
     }
-  }, AUCTION_TIME_LIMIT);  
+  }, timeout);  
 };
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
@@ -95,7 +112,7 @@ var startAuction = function (socket, name) {
         io.emit('player update', playerList[currentPlayerIndex]);
         io.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
         io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
-        setExpiration();
+        setExpiration(AUCTION_TIME_LIMIT);
       }      
     });
     socket.on('chat message', function(msg){
@@ -103,11 +120,14 @@ var startAuction = function (socket, name) {
     });
     socket.on('waitees message', function(msg){
       /**
-       * Currently No limitaions on waitees... resets the timer to AUCTION_TIME_LIMIT_SEC
+       * Resets the timer to WAITEES_TIME_LIMIT_SEC
       **/
-      io.emit('bid message', name + ": requested waitees!!!");
-      io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
-      setExpiration();
+      if(getWaiteesAvailable(name)) {
+        deductWaiteesAvailable(name);
+        io.emit('bid message', name + ": requested waitees!!!");
+        io.emit("Timer Start", WAITEES_TIME_LIMIT_SEC);
+        setExpiration(WAITEES_TIME_LIMIT);
+      }
     });
     if (!playerList || !playerList.length) {
       playerList = players.getAllPlayers();
@@ -116,7 +136,7 @@ var startAuction = function (socket, name) {
     if(client.length == AUCTION_SIZE) {
       io.emit("Current Player", playerList[currentPlayerIndex]);
       io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
-      setExpiration();
+      setExpiration(AUCTION_TIME_LIMIT);
     }  
  };
 io.on('connection', function(socket){
