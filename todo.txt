@@ -9,9 +9,9 @@
 6. Disable Repeated Bids - DONE
 7. 5 sec break between bids - DONE
 8. "Adaptive Bidding mode" support for bidding -
-      where a player can select a max value upto which the system should bid.
-      since disabling consecutive bids by a same user is in player, he will be able to adapt to get it at a lower price also
-      if the value goes above the peak, user has to take control and start manual bidding
+      where a player can select a max value upto which the system should bid for him.
+      The system will be able to adapt and buy the player at a upto the price he quoted
+      if the value goes above his quote, then user has to take control and start manual bidding
       
 ##### Code Cleanups #####
 
@@ -20,6 +20,6 @@
 
 
 ##### UI looks update 
-Sold players list like a ticker. Sample code below ( http://codepen.io/gabrieleromanato/pen/IoDBy )
+Sold players list like a ticker. Sample code below link - http://codepen.io/gabrieleromanato/pen/IoDBy 
 
 
