@@ -36,7 +36,7 @@ angular.module('app', ['socketFactory'])
 	}
 }])
 .controller('BidController', ['$scope', 'socket', function ($scope, $socket) {
-	$scope.moneyLeft = 1000;
+	$scope.purseBalance = 0;
 	$scope.makeBid = function () {
 		$socket.$emit('bid message', $scope.currentBid);
 		$scope.currentBid = "";
@@ -49,6 +49,9 @@ angular.module('app', ['socketFactory'])
 	$socket.$on('bid message', function (msg) {
 		$('#messages').append($('<li>').text(msg));
 		$('#messages').animate({scrollTop: $('#messages').height()}, 500);
+	});
+	$socket.$on('purse balance', function (balance) {
+		$scope.purseBalance = balance;
 	});
 	$socket.$on('bid update', function (bid) {
 		$scope.currentBid = bid;

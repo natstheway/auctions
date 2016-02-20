@@ -31,7 +31,7 @@
 	<div id="bid" ng-controller="BidController">
 		<ul id="messages"></ul>
 	    <div id="form" action="" ng-show="started">
-	      <input id="m" ng-model= "moneyLeft" disabled/>
+	      <input id="m" ng-model= "purseBalance" disabled/>
 	      <button ng-click="makeBid()">Bid {{currentBid}}</button>
 	    </div>	    
 	      <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
