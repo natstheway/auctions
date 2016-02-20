@@ -1,4 +1,17 @@
-update and prioritize this list
+### TO-DO ####
 
-1. Money Spent
-2. Player Summary, Category and Type
+#### Featues #######
+1. Page Layout with Player Summary, Category and Type
+2. Chat Support
+3. Waitees
+4. Money Spent
+5. Online Team list
+6. Disable Repeated Bids
+7. 5 sec break between bids 
+
+##### Code Cleanups #####
+
+1. Modules in server.js
+2. UI code clean up
+
+
