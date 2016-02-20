@@ -1,13 +1,33 @@
 ### TO-DO ####
 
 #### Features #######
-1. Online Team list - 
+
+1. Update prayer profile ( player.js ) to have following values :
+	-id
+	-name
+	-baseprice
+	-currentprice
+	-auction team name
+	-status - bidding/sold/unsold 
+	*country -
+	*category - uncapped/capped/foriegn
+	*type - bat/bowl/all/wk
+	*auction category - need to get the types here..
+	*summary - 
+	*site suggested price for the player - 
+	
+	need to add all the (*) entries as part of player profile
+
+2. Player summary should be put in the chatbox just 1 or 2 seconds before the auction starts !
+	sample player summaries available at player.json
+
+3. Online Team list - 
 	Data available in the server code.. Need to see where to put in the UI...
 		
-2. Page Layout with Player related details, Auction Feeds , and others based on Layout.jpeg
+4. Page Layout with Player related details, Auction Feeds , and others based on Layout.jpeg
 	The layout.jpg has been updated..
 
-3. "Adaptive Bidding mode" support for bidding -
+5. "Adaptive Bidding mode" support for bidding -
       where a player can select a max value upto which the system should bid for him.
       The system will be able to adapt and buy the player at a upto the price he quoted
       if the value goes above his quote, then user has to take control and start manual bidding
