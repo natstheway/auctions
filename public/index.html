@@ -11,12 +11,13 @@
 	<script type="text/javascript" src="./js/app.js"></script>
 </head>
 <body ng-app="app">
+	<h2 id="brand" >Welcome to Auctions!!</h2>
 	<div id="LeftZone">
 		<div id="bid" ng-controller="BidController">
 			<ul id="messages"></ul>
 		    <div id="form" action="" ng-show="started">
-		    	<input/>
-		    	<button>Chat</button>
+		    	<input ng-model="chatText" required/>
+		    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
 		    	<button>Waitees!!</button>
 		    	<button ng-click="makeBid()">Bid {{currentBid}}</button>
 		    	<input id="m" ng-model= "purseBalance" disabled/>

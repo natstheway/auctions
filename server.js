@@ -97,6 +97,9 @@ var startAuction = function (socket, name) {
         setExpiration();
       }      
     });
+    socket.on('chat message', function(msg){
+      io.emit('chat message', name + ":" + msg);
+    });
     if (!playerList || !playerList.length) {
       playerList = players.getAllPlayers();
       currentPlayerIndex = 0;

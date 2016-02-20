@@ -42,11 +42,20 @@ angular.module('app', ['socketFactory'])
 		$scope.currentBid = "";
 		return false;
 	};
+	$scope.chat = function () {
+		$socket.$emit('chat message', $scope.chatText);
+		$scope.chatText = "";
+		return false;
+	};
 	$scope.startAuction = function () {
 		$socket.$emit('start auction');		
 		$scope.$parent.started = true;
 	};
 	$socket.$on('bid message', function (msg) {
+		$('#messages').append($('<li>').text(msg));
+		$('#messages').animate({scrollTop: $('#messages').height()}, 500);
+	});
+	$socket.$on('chat message', function (msg) {
 		$('#messages').append($('<li>').text(msg));
 		$('#messages').animate({scrollTop: $('#messages').height()}, 500);
 	});
