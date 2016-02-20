@@ -8,7 +8,11 @@
 5. Online Team list
 6. Disable Repeated Bids
 7. 5 sec break between bids - DONE
-
+8. "Adaptive Bidding mode" support for bidding -
+      where a player can select a max value upto which the system should bid.
+      since disabling consecutive bids by a same user is in player, he will be able to adapt to get it at a lower price also
+      if the value goes above the peak, user has to take control and start manual bidding
+      
 ##### Code Cleanups #####
 
 1. Modules in server.js
