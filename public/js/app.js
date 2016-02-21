@@ -1,6 +1,7 @@
 angular.module('app', ['socketFactory'])
 .controller('MainController', ['$scope', 'socket', '$interval', function ($scope, $socket, $interval) {
-	$scope.timer = null;
+	$scope.timer = null;	
+	$scope.purseBalance = 0;
 	$socket.$on('Current Player', function (msg) {
 		if (!$scope.currentPlayer || $scope.currentPlayer.name !== msg.name) {
 			$scope.playerList.push(msg);
@@ -30,13 +31,16 @@ angular.module('app', ['socketFactory'])
 		$interval.cancel($scope.timer);
 		$scope.currentPlayer = null;
 	});
+	$socket.$on('purse balance', function (balance) {
+		$scope.purseBalance = balance;
+	});
 	$scope.register = function () {
 		$socket.$emit('Registration', $scope.userName);
+		$scope.$parent.userName = $scope.userName;
 		$scope.$parent.registered = true;
 	}
 }])
 .controller('BidController', ['$scope', 'socket', function ($scope, $socket) {
-	$scope.purseBalance = 0;
 	$scope.makeBid = function () {
 		$socket.$emit('bid message', $scope.currentBid);
 		$scope.currentBid = "";
@@ -63,9 +67,6 @@ angular.module('app', ['socketFactory'])
 		$('#messages').append($('<li>').text(msg));
 		$('#messages').animate({scrollTop: $('#messages').height()}, 500);
 	});
-	$socket.$on('purse balance', function (balance) {
-		$scope.purseBalance = balance;
-	});
 	$socket.$on('bid update', function (bid) {
 		$scope.currentBid = bid;
 	});
@@ -75,9 +76,21 @@ angular.module('app', ['socketFactory'])
 	$socket.$on('player update', function (data) {
 		$scope.playerList.pop();
 		$scope.playerList.push(data);
+		if (data.status== "sold" && data.team == $scope.userName) {
+			$scope.$parent.myPlayers[data.category].push(data.name);
+		}
 	});
-}]).filter('reverse', function() {
+}])
+.controller('StatsController', ['$scope', function ($scope) {
+	$scope.$parent.myPlayers = {
+		"Batsman": [],
+		"Bowler": [],
+		"All Rounder": [],
+		"Wicket Keeper" : []	
+	};
+}])
+.filter('reverse', function() {
   return function(items) {
     return items.slice().reverse();
   };
-});;
+});

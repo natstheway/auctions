@@ -7,7 +7,10 @@ module.exports = {
         "basePrice": 200,
         "currentPrice": "",
         "team": "",
-        "status": "bidding"
+        "status": "bidding",
+        "age": 34,
+        "country": "India",
+        "category": "Wicket Keeper"
       },
       {
         "id": 2,
@@ -15,7 +18,10 @@ module.exports = {
         "basePrice": 200,
         "currentPrice": "",
         "team": "",
-        "status": "bidding"
+        "status": "bidding",
+        "age": 29,
+        "country": "India",
+        "category": "Bowler"
       },
       {
         "id": 3,
@@ -23,7 +29,10 @@ module.exports = {
         "basePrice": 200,
         "currentPrice": "",
         "team": "",
-        "status": "bidding"
+        "status": "bidding",
+        "age": 27,
+        "country": "India",
+        "category": "Batsman"
       },
       {
         "id": 4,
@@ -31,7 +40,10 @@ module.exports = {
         "basePrice": 200,
         "currentPrice": "",
         "team": "",
-        "status": "bidding"
+        "status": "bidding",
+        "age": 27,
+        "country": "India",
+        "category": "Batsman"
       },
       {
         "id": 5,
@@ -39,7 +51,10 @@ module.exports = {
         "basePrice": 200,
         "currentPrice": "",
         "team": "",
-        "status": "bidding"
+        "status": "bidding",
+        "age": 34,
+        "country": "India",
+        "category": "All Rounder"
       }
     ]
   }
