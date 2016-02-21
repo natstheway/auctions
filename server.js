@@ -87,6 +87,7 @@ var setExpiration = function (timeout) {
         if (currentPlayerIndex < playerList.length - 1) {
           currentPlayerIndex = currentPlayerIndex + 1;
           io.emit("Current Player", playerList[currentPlayerIndex]);
+          io.emit('bid message', playerList[currentPlayerIndex].summary);
           io.emit('bid update', playerList[currentPlayerIndex].basePrice);
           io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
           setExpiration(AUCTION_TIME_LIMIT);
@@ -135,6 +136,7 @@ var startAuction = function (socket, name) {
     }  
     if(client.length == AUCTION_SIZE) {
       io.emit("Current Player", playerList[currentPlayerIndex]);
+      io.emit('bid message', playerList[currentPlayerIndex].summary);
       io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
       setExpiration(AUCTION_TIME_LIMIT);
     }  
