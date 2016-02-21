@@ -26,19 +26,38 @@
 	</div>
 	<div id="MiddleZone">
 		<div id="list" ng-controller="ListController" ng-show="registered">
-			<div id="ListTitle">
-				<span>Name</span>
-				<span>Base Price</span>
-				<span>Current Price</span>
-				<span>Team</span>
-				<span>Status</span>
+			<button ng-click="toggleFeeds()">{{toggleLabel}}</button>
+			<div ng-if="!feedsEnabled">
+				<div id="ListTitle">
+					<span>Name</span>
+					<span>Base Price</span>
+					<span>Current Price</span>
+					<span>Team</span>
+					<span>Status</span>
+				</div>
+				<div ng-repeat="player in playerList | reverse">
+					<span>{{player.name}}</span>
+					<span>{{player.basePrice}}</span>
+					<span>{{player.currentPrice}}</span>
+					<span>{{player.team}}</span>
+					<span>{{player.status}}</span>
+				</div>
 			</div>
-			<div ng-repeat="player in playerList | reverse">
-				<span>{{player.name}}</span>
-				<span>{{player.basePrice}}</span>
-				<span>{{player.currentPrice}}</span>
-				<span>{{player.team}}</span>
-				<span>{{player.status}}</span>
+			<div id="Feeds" ng-if="feedsEnabled">
+				<div ng-repeat="player in playerList">
+					<p ng-if="player.status=='sold'">
+						{{player.name}} is {{player.status}} to {{player.team}} for {{player.currentPrice}}
+					</p>
+					<p ng-if="player.status=='unsold'">
+						{{player.name}} remains {{player.status}}
+					</p>
+					<p ng-if="player.status=='bidding' && player.team">
+						{{player.team}} is bidding {{player.name}} for {{player.currentPrice}}
+					</p>
+					<p ng-if="player.status=='bidding' && !player.team">
+						{{player.name}} is available for {{player.basePrice}}
+					</p>
+				</div>
 			</div>
 		</div>
 		<div id="main" ng-controller="MainController">

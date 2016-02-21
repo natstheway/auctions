@@ -8,6 +8,9 @@ angular.module('app', ['socketFactory'])
 			if ($scope.started){
 				$('#messages').children().remove();
 			}
+			if ($('#Feeds').length) {
+				$('#Feeds').animate({scrollTop: $('#messages').height()}, 500);
+			}
 		}
 		$scope.currentPlayer = msg;
 		$scope.$parent.currentBid = msg.currentPrice || msg.basePrice;
@@ -73,11 +76,19 @@ angular.module('app', ['socketFactory'])
 }])
 .controller('ListController', ['$scope', 'socket', function ($scope, $socket) {
 	$scope.$parent.playerList = [];
+	$scope.toggleLabel = "Feeds"
+	$scope.toggleFeeds = function () {
+		$scope.toggleLabel = $scope.toggleLabel == "Feeds" ? "Reports" : "Feeds";
+		$scope.feedsEnabled = !$scope.feedsEnabled;
+	}
 	$socket.$on('player update', function (data) {
 		$scope.playerList.pop();
 		$scope.playerList.push(data);
 		if (data.status== "sold" && data.team == $scope.userName) {
 			$scope.$parent.myPlayers[data.category].push(data.name);
+		}
+		if ($scope.feedsEnabled) {
+			$('#Feeds').animate({scrollTop: $('#messages').height()}, 500);
 		}
 	});
 }])
