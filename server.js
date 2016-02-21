@@ -123,7 +123,7 @@ var startAuction = function (socket, name) {
       /**
        * Resets the timer to WAITEES_TIME_LIMIT_SEC
       **/
-      if(getWaiteesAvailable(name)) {
+      if(getWaiteesAvailable(name) && playerList[currentPlayerIndex].status != "sold" && playerList[currentPlayerIndex].status != "unsold") {
         deductWaiteesAvailable(name);
         io.emit('bid message', name + ": requested waitees!!!");
         io.emit("Timer Start", WAITEES_TIME_LIMIT_SEC);
