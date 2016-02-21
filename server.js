@@ -110,7 +110,7 @@ var startAuction = function (socket, name) {
          * use io.emit to send to everyone
         **/
         io.emit('player update', playerList[currentPlayerIndex]);
-        io.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
+        socket.broadcast.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
         io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
         setExpiration(AUCTION_TIME_LIMIT);
       }      

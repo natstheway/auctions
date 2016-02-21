@@ -19,7 +19,7 @@
 		    	<input ng-model="chatText" required/>
 		    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
 		    	<button ng-click="waitees()">Waitees!!</button>
-		    	<button ng-click="makeBid()">Bid {{currentBid}}</button>
+		    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
 		    </div>
 		    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
 		</div>		
