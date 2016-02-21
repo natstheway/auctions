@@ -14,7 +14,10 @@ INSTALL INSTRUCTIONS
 5) execute the below command
   node server.js
   
+6) Now open the below link in 3 browsers, one by one... register and join to each one of them to start the auction :
+  localhost:8000
 
+7) Most important, Play the game and enjoy
 
 MISC DETAILS :
 
