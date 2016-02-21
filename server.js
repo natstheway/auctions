@@ -101,7 +101,7 @@ var setExpiration = function (timeout) {
 };
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
-      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team) {    // starting the auction and showing the first player only after everyone joins
+      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "sold" && playerList[currentPlayerIndex].status != "unsold") {    // starting the auction and showing the first player only after everyone joins
         io.emit('bid message', name + ":" + msg);
         playerList[currentPlayerIndex].currentPrice = msg;
         playerList[currentPlayerIndex].team = name;
