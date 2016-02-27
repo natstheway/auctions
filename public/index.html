@@ -20,6 +20,9 @@
 		    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
 		    	<button ng-click="waitees()">Time Top-Up</button>
 		    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
+				<button ng-click="toggleModes()">{{toggleModeLabel}}</button>
+				<input ng-model="autoBidCap" type="number" min="200" max="1500">
+				<button ng-click="makeAutoBid()">Set</button>
 		    </div>
 		    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
 		</div>		
@@ -80,11 +83,11 @@
 						<p>Base Price : {{currentPlayer.basePrice}}</p>
 						<p>Age : {{currentPlayer.age}}</p>
 						<p>Country : {{currentPlayer.country}}</p>
-						<p>Catrgory : {{currentPlayer.category}}</p>
+						<p>Category : {{currentPlayer.category}}</p>
 					</div>
 				</div>			
 			</div>
-		</div>			
+		</div>
 	</div>
 	<div id="RightZone" ng-show="registered">
 		<div ng-controller="StatsController">
