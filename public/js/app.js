@@ -44,9 +44,22 @@ angular.module('app', ['socketFactory'])
 	}
 }])
 .controller('BidController', ['$scope', 'socket', function ($scope, $socket) {
+	$scope.toggleModeLabel = "In Manual"
+	$scope.toggleModes = function () {
+		$scope.toggleModeLabel = $scope.toggleModeLabel == "In Manual" ? "In Autobid" : "In Manual";
+		$scope.manualEnabled = !$scope.manualEnabled;
+	}
 	$scope.makeBid = function () {
 		$socket.$emit('bid message', $scope.currentBid);
 		$scope.currentBid = "";
+		return false;
+	};
+
+	$scope.makeAutoBid = function () {
+		if($scope.toggleModeLabel == "In Manual")
+			$socket.$emit('manualbid message', $scope.autoBidCap);
+		else
+			$socket.$emit('autobid message', $scope.autoBidCap);
 		return false;
 	};
 	$scope.chat = function () {
@@ -72,6 +85,10 @@ angular.module('app', ['socketFactory'])
 	});
 	$socket.$on('bid update', function (bid) {
 		$scope.currentBid = bid;
+	});
+	$socket.$on('manual mode',function () {
+		$scope.toggleModeLabel = "In Manual";
+		$scope.autoBidCap="";
 	});
 }])
 .controller('ListController', ['$scope', 'socket', function ($scope, $socket) {
