@@ -16,7 +16,7 @@ var AUCTION_TIME_LIMIT_SEC = 15; // 15 seconds
 var WAITEES_TIME_LIMIT = 30000; // 30 seconds
 var WAITEES_TIME_LIMIT_SEC = 30; // seconds
 var PLAYER_BID_GAP = 5000; // 5 seconds
-var MAX_PURSE_AMOUNT = 6000; // 6000 Lakhs
+var MAX_PURSE_AMOUNT = 2000; // 2000 Lakhs .. change later
 var MAX_WAITEES_PER_USER = 2; // maximum waitees that can be used up by the user
 // Autobid variables 
 var autobidList = [];
@@ -102,7 +102,11 @@ function getAutobidsAvailable() {
 // get the next bid amount based on the current amount
 function getNextBidAmount(currentPrice) {
   // need to changed based on auction rules
-  return currentPrice+10;
+  if(currentPrice <=480)
+    return currentPrice+20;
+  else if(currentPrice > 480)
+    return currentPrice + 25;
+
 }
 // delete user on exit
 function deleteFromClientList(name) {
@@ -135,7 +139,7 @@ var setExpiration = function (socket,timeout) {
             // need to check for other players in the autobid list
             continue;
           }
-          if(playerList.length && element.name != playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "sold" && playerList[currentPlayerIndex].status != "unsold") {    // starting the auction and showing the first player only after everyone joins
+          if(playerList.length && element.name != playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
             // auto bid code -
             console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
             if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {
@@ -160,14 +164,14 @@ var setExpiration = function (socket,timeout) {
     if(client.length == AUCTION_SIZE) {  // setting timers only when all the participants are in !!
       io.emit("Timer Stop");
       if (playerList[currentPlayerIndex].team) {
-         playerList[currentPlayerIndex].status = "sold";
+         playerList[currentPlayerIndex].status = "Sold";
          io.emit('bid message',  playerList[currentPlayerIndex].name + ' sold to ' + playerList[currentPlayerIndex].team);
           // Updating the user purse balance, players purschased count and autobidlist
           clearAutoBidList();
           io.emit('manual mode');
           clientPurchaseUpdate(playerList[currentPlayerIndex].name, playerList[currentPlayerIndex].team, playerList[currentPlayerIndex].currentPrice);
       } else {
-        playerList[currentPlayerIndex].status = "unsold";
+        playerList[currentPlayerIndex].status = "Unsold";
         io.emit('bid message',  playerList[currentPlayerIndex].name + ' is unsold');
       }
       io.emit('player update', playerList[currentPlayerIndex]);
@@ -190,7 +194,7 @@ var setExpiration = function (socket,timeout) {
 };
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
-      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "sold" && playerList[currentPlayerIndex].status != "unsold") {    // starting the auction and showing the first player only after everyone joins
+      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
         io.emit('bid message', name + ":" + msg);
         playerList[currentPlayerIndex].currentPrice = msg;
         playerList[currentPlayerIndex].team = name;
@@ -200,7 +204,7 @@ var startAuction = function (socket, name) {
          * use io.emit to send to everyone
         **/
         io.emit('player update', playerList[currentPlayerIndex]);
-        socket.broadcast.emit('bid update', playerList[currentPlayerIndex].currentPrice + 10);
+        socket.broadcast.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
         io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
         setExpiration(socket,AUCTION_TIME_LIMIT);
       }      
@@ -209,7 +213,7 @@ var startAuction = function (socket, name) {
       console.log("autobid received amount is "+amount);
       // what to do when u receive a autobid message
       // add him to autobid list ... 
-      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "sold" && playerList[currentPlayerIndex].status != "unsold") {    // starting the auction and showing the first player only after everyone joins
+      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
         if(amount >= playerList[currentPlayerIndex].basePrice ) {
           if(playerList[currentPlayerIndex].currentPrice == "") {
             playerList[currentPlayerIndex].currentPrice = playerList[currentPlayerIndex].basePrice;
@@ -237,9 +241,9 @@ var startAuction = function (socket, name) {
       /**
        * Resets the timer to WAITEES_TIME_LIMIT_SEC
       **/
-      if(getWaiteesAvailable(name) && playerList[currentPlayerIndex].status != "sold" && playerList[currentPlayerIndex].status != "unsold") {
+      if(getWaiteesAvailable(name) && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {
         deductWaiteesAvailable(name);
-        io.emit('bid message', name + ": requested waitees!!!");
+        io.emit('bid message', name + ": requested time top-up ");
         io.emit("Timer Start", WAITEES_TIME_LIMIT_SEC);
         setExpiration(socket,WAITEES_TIME_LIMIT);
       }
@@ -261,6 +265,8 @@ io.on('connection', function(socket){
     client.push(getClientObj(name));
     clientSockets[name] = socket;
     socket.emit("purse balance", MAX_PURSE_AMOUNT);
+    if(client.length == AUCTION_SIZE) // welcome message before auction starts ..
+      io.emit("LET THE BATTLE BEGIN");
     socket.on('disconnect', function(){
       io.emit('bid message', name + ' : disconnected');
       deleteFromClientList(name);
