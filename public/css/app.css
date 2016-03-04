@@ -5,20 +5,24 @@
     box-sizing: border-box; 
   }
   body {
-    font: 13px Helvetica, Arial;
-    opacity: 0.6;
-    background-image: url('../images/bg.jpg');
+    font: 13px Arial,sans-serif;
+    opacity: 1;
+    background-image: url('../images/bg-blurred.jpg');
     background-repeat: no-repeat;
     background-size:cover;
   }
   #brand{
     text-align: center;
-    color: #A96;
     font-size: 24px;
   }
   div#LeftZone {
     width: 30%;
     float: left;
+    background-image: url('../images/chatbg1.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
+    border: 5px solid black;
+    height: 350px;
   }
   div#MiddleZone {
     float:left;
@@ -26,7 +30,11 @@
   }
   div#RightZone {
     float:left;
-    width: 30%;
+    width: 32%;
+    background-image: url('../images/playerlist.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
+    height: 350px;
   }
   div#form {
     /*background: #000;*/
@@ -52,20 +60,22 @@
   }
   div#current {
     float: left;
-    color: yellow;
+    color: black;
     font-size: 20px;
     width: 64%;
-    border: 1px solid yellow;
-    height: 300px;
+    height: 160px;
+    border: 1px solid black;
   }
   div#clock {
     float: left;
-    color: yellow;
+    color: red;
+    text-align: center;
+    font-family: "Comic Sans MS";
     font-size: 20px;
     width: 35%;
-    border: 1px solid yellow;
     position: relative;
-    height: 300px;
+    height: 160px;
+    background-image: url('../images/timer1.jpg');
   }
   div#current div {
     float: left;
@@ -82,11 +92,11 @@
   div#list {
     width: 100%;
     float: left;
-    height: 200px;
+    height: 350px;
+    background-image: url('../images/chatbg2.jpg');
     overflow: auto;
   }
   div#list span {
-    border: 1px solid yellow;
     width: 20%;
     height: 33px;
     display: block; 
@@ -96,8 +106,8 @@
     color: white;
   }
   div#Feeds {
-    color: yellow;
-    font-size: 24px;
+    color: white;
+    font-size: 16px;
     height: 100px;
     overflow: auto; 
   }
@@ -139,26 +149,26 @@
   div#list div:nth-child(odd) span{
     background: #568;
   }
-  h3#Balance {
-    color: yellow;
-    font-size: 20px;
-  }
   #RightZone h1{
     text-align: center;
-    color: yellow;
-    font-size: 24px;
-    margin: 1%;
-    border-bottom: 2px solid yellow;  
+    color: "black";
+    font-size: 18px;
+    margin: 0.5%;
+    font-weight: bolder;
   }
   #RightZone ul {
     font-weight: bold;
+    font-family: "Lucida Console";
     text-align: center;
-    border: 1px solid yellow;
-    color: yellow;
-    font-size: 20px;    
+    color: black;
+    font-size: 14px;    
     list-style-type: none;
     margin-left: 2%;
+    font-weight: normal;
   }
   #RightZone li{
-    font-size: 16px;
+    font-size: 12px;
+    font-weight: italic;
+    color: green;
+    font-family: "Lucida Console";
   }
