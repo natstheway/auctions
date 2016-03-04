@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="./js/app.js"></script>
 </head>
 <body ng-app="app">
-	<h2 id="brand" >Fantasy Auctions</h2>
+	<h2 id="brand">Fantasy Auctions</h2>
 	<div id="LeftZone" ng-show="registered">
 		<div id="bid" ng-controller="BidController">
 			<ul id="messages"></ul>
@@ -72,18 +72,18 @@
 				<div ng-if="currentPlayer" id="clock">
 					<h3>Time Left</h3>
 					<h1 ng-model="clock">{{clock}}</h1>
-					<h3>Purse Left</h3>
-		    		<h3 id="Balance">{{purseBalance}} Lakhs</h3>
+					<h3 color="Green">Purse Left</h3>
+		    		<h3 id="Balance" color="Green">{{purseBalance}} Lakhs</h3>
 				</div>			
 				<div ng-if="currentPlayer" id="current">
-					<h3>Player</h3>
+					<h3 align="center">Player Profile</h3>
 					<img ng-src="./images/players/{{currentPlayer.id}}.jpg">
 					<div>
-						<p>Name : {{currentPlayer.name}}</p>
-						<p>Base Price : {{currentPlayer.basePrice}} Lakhs</p>
-						<p>Age : {{currentPlayer.age}}</p>
-						<p>Country : {{currentPlayer.country}}</p>
-						<p>Role : {{currentPlayer.category}}</p>
+						<p> Name : {{currentPlayer.name}}</p>
+						<p> Base Price : {{currentPlayer.basePrice}} Lakhs</p>
+						<p> Age : {{currentPlayer.age}}</p>
+						<p> Country : {{currentPlayer.country}}</p>
+						<p> Role : {{currentPlayer.category}}</p>
 					</div>
 				</div>			
 			</div>
