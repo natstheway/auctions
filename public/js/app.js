@@ -8,8 +8,8 @@ angular.module('app', ['socketFactory'])
 			if ($scope.started){
 				$('#messages').children().remove();
 			}
-			if ($('#Feeds').length) {
-				$('#Feeds').animate({scrollTop: $('#messages').height()}, 500);
+			if ($('#Sold Player Thread').length) {
+				$('#Sold Player Thread').animate({scrollTop: $('#messages').height()}, 500);
 			}
 		}
 		$scope.currentPlayer = msg;
@@ -44,10 +44,10 @@ angular.module('app', ['socketFactory'])
 	}
 }])
 .controller('BidController', ['$scope', 'socket', function ($scope, $socket) {
-	$scope.toggleModeLabel = "In Manual"
+	$scope.toggleModeLabel = "Manual Bidding"
 	$scope.toggleModes = function () {
-		$scope.toggleModeLabel = $scope.toggleModeLabel == "In Manual" ? "In Autobid" : "In Manual";
-		$scope.manualEnabled = !$scope.manualEnabled;
+		$scope.toggleModeLabel = $scope.toggleModeLabel == "Manual Bidding" ? "Auto bidding" : "Manual Bidding";
+		$scope.autoEnabled = !$scope.autoEnabled;
 	}
 	$scope.makeBid = function () {
 		$socket.$emit('bid message', $scope.currentBid);
@@ -56,7 +56,8 @@ angular.module('app', ['socketFactory'])
 	};
 
 	$scope.makeAutoBid = function () {
-		if($scope.toggleModeLabel == "In Manual")
+		//if($scope.toggleModeLabel == "In Manual")
+		if(!$scope.autoEnabled)
 			$socket.$emit('manualbid message', $scope.autoBidCap);
 		else
 			$socket.$emit('autobid message', $scope.autoBidCap);
@@ -87,25 +88,26 @@ angular.module('app', ['socketFactory'])
 		$scope.currentBid = bid;
 	});
 	$socket.$on('manual mode',function () {
-		$scope.toggleModeLabel = "In Manual";
+		$scope.toggleModeLabel = "Manual Bidding";
 		$scope.autoBidCap="";
+		$scope.autoEnabled = !$scope.autoEnabled;
 	});
 }])
 .controller('ListController', ['$scope', 'socket', function ($scope, $socket) {
 	$scope.$parent.playerList = [];
-	$scope.toggleLabel = "Feeds"
+	$scope.toggleLabel = "Sold Player Thread"
 	$scope.toggleFeeds = function () {
-		$scope.toggleLabel = $scope.toggleLabel == "Feeds" ? "Reports" : "Feeds";
+		$scope.toggleLabel = $scope.toggleLabel == "Sold Player Thread" ? "Reports" : "Sold Player Thread";
 		$scope.feedsEnabled = !$scope.feedsEnabled;
 	}
 	$socket.$on('player update', function (data) {
 		$scope.playerList.pop();
 		$scope.playerList.push(data);
-		if (data.status== "sold" && data.team == $scope.userName) {
+		if (data.status== "Sold" && data.team == $scope.userName) {
 			$scope.$parent.myPlayers[data.category].push(data.name);
 		}
 		if ($scope.feedsEnabled) {
-			$('#Feeds').animate({scrollTop: $('#messages').height()}, 500);
+			$('#Sold Player Thread').animate({scrollTop: $('#messages').height()}, 500);
 		}
 	});
 }])
