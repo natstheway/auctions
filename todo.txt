@@ -1,48 +1,72 @@
 ### TO-DO ####
 
-#### Features #######
+#### Action Items #######
 
-1. Update prayer profile ( player.js ) to have following values :
+1. Update prayer profile ( player.js ) to have following fields :
 	-id
 	-name
 	-baseprice
 	-currentprice
 	-auction team name
 	-status - bidding/sold/unsold 
-	*country -
-	*category - uncapped/capped/foriegn
-	*type - bat/bowl/all/wk
-	*auction category - need to get the types here..
-	*summary - 
+	-country -
+	-age 
+	-role - bat/bowl/all/wk
+	-summary - intro to the player
 	*site suggested price for the player - 
 	
-	need to add all the (*) entries as part of player profile
+	need to add the (*) entries as part of player profile
+
+	STATUS : Completed
 
 2. Player summary should be put in the chatbox just 1 or 2 seconds before the auction starts !
-	sample player summaries available at player.json
+
+	STATUS : Completed
 
 3. Online Team list - 
-	Data available in the server code.. Need to see where to put in the UI...
+
+	STATUS : Data available in the server code.. Need to see where to display it.
 		
 4. Page Layout with Player related details, Auction Feeds , and others based on Layout.jpeg
 	The layout.jpg has been updated..
 
-5. "Adaptive Bidding mode" support for bidding -
+	STATUS : Complete with deviations from the proposed layout.
+
+5. "Auto Bidding mode" support for bidding -
       where a player can select a max value upto which the system should bid for him.
       The system will be able to adapt and buy the player at a upto the price he quoted
       if the value goes above his quote, then user has to take control and start manual bidding
 
-
+	STATUS : Completed.
+	
 Features completed :
 1. Chat Support - DONE
 2. Waitees - DONE
 3. Money Spent - DONE
-4. Disable Repeated Bids - DONE
+4. Disable Repeated Bids by same player - DONE
 5. 5 sec break between bids - DONE
-
+6. "Autobidding" Mode - DONE
 
 ##### Code Cleanups #####
 
 1. Modules in server.js
 2. UI code clean up
-
+3. Modularising player data access ( player.js )
+	All the access ( get/set ) on player data will be done only through APIs exposed via player.js
+	Currently, getAllPlayers returns the entire players list. Instead, we should make suitable changes to
+	improve seperation of concern and segregation of duties.
+	
+	APIs : ( self explanatory from the names itself )
+	1) getPlayerForAuction()
+		Returns a players name ( who is yet to be auctioned).
+	2) getUnsoldPlayersForAuction()
+		This will return a unsold player names in the auction i.e. who was auctioned and unsold.
+	3) getPlayerAttribute(name,attribute)
+		Returns the attribute value of the player ( name )
+		Example : getPlayerAttribute('yuvraj','current price') should return his current price.
+	4) setPlayerAttribute(name,attribute,value)
+		Sets the value to the attribute of the player ( name )
+		Example : setPlayerAttribute('yuvraj','current price',1000) should set the yuvraj's current price as 1000.
+	5) getPlayerListByAttribute(attribute,value)
+		Get a list of players who's attributes are 'value'. 
+		Example : getPlayerListByAttribute('country','India') should return all Indian players in the list
