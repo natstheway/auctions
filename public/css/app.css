@@ -28,7 +28,6 @@
   #brand{
     text-align: center;
     font-size: 24px;
-    text-decoration: underline;
     color: #011F51;
     background-color: #F6FBFF;
     text-shadow: 0 0 10px;
@@ -187,12 +186,15 @@
   #RightZone ul {
     font-weight: bold;
     font-family: "Lucida Console";
-    text-align: center;
+    text-align: left;
     color: black;
     font-size: 14px;    
     list-style-type: none;
-    margin-left: 2%;
+    margin-left: 45px;
     font-weight: normal;
+    min-height: 50px;
+    border-top: 1px solid #D9D9D9;
+    font-style: italic;
   }
   #RightZone li{
     font-size: 12px;
