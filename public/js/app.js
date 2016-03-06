@@ -90,7 +90,7 @@ angular.module('app', ['socketFactory'])
 	$socket.$on('manual mode',function () {
 		$scope.toggleModeLabel = "Manual Bidding";
 		$scope.autoBidCap="";
-		$scope.autoEnabled = !$scope.autoEnabled;
+		$scope.autoEnabled = false;
 	});
 }])
 .controller('ListController', ['$scope', 'socket', function ($scope, $socket) {
