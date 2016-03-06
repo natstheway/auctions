@@ -45,6 +45,11 @@ function getClientObj(name) {
         "biddingMode": "manual"
       };
 }
+//get client purse left
+function getClientPurseLeft(name){
+  var tempUser = getObjects(client,"name", name)[0];
+  return tempUser.purseBalance;
+}
 // updating user ( client ) profile after purchase
 function clientPurchaseUpdate(name, team, currentPrice) {
   var tempUser = getObjects(client,"name", team)[0];
@@ -142,7 +147,8 @@ var setExpiration = function (socket,timeout) {
           if(playerList.length && element.name != playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
             // auto bid code -
             console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
-            if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {
+            console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
+            if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {
               io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
               playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice);
               playerList[currentPlayerIndex].team = element.name;
@@ -194,7 +200,8 @@ var setExpiration = function (socket,timeout) {
 };
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
-      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
+      console.log("client " +name+ " purse left  is "+ getClientPurseLeft(name));
+      if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold" && getClientPurseLeft(name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {    // starting the auction and showing the first player only after everyone joins
         io.emit('bid message', name + ":" + msg);
         playerList[currentPlayerIndex].currentPrice = msg;
         playerList[currentPlayerIndex].team = name;
