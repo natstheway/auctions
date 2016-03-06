@@ -12,90 +12,92 @@
 </head>
 <body ng-app="app">
 	<h2 id="brand">Fantasy Auctions</h2>
-	<div id="LeftZone" ng-show="registered">
-		<div id="bid" ng-controller="BidController">
-			<ul id="messages"></ul>
-		    <div id="form" action="" ng-show="started">
-		    	<input ng-model="chatText" required/>
-		    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
-		    	<button ng-click="waitees()">Time Top-Up</button>
-		    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
-				<button ng-click="toggleModes()">{{toggleModeLabel}}</button>
-				<input ng-model="autoBidCap" type="number" min="200" max="1500" ng-disabled=!autoEnabled>
-				<button ng-click="makeAutoBid()" ng-disabled=!autoEnabled>Set</button>
-		    </div>
-		    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
-		</div>		
-	</div>
-	<div id="MiddleZone">
-		<div id="list" ng-controller="ListController" ng-show="registered">
-			<button ng-click="toggleFeeds()">{{toggleLabel}}</button>
-			<div ng-if="!feedsEnabled">
-				<div id="ListTitle">
-					<span>Name</span>
-					<span>Base Price</span>
-					<span>Current Price</span>
-					<span>Team</span>
-					<span>Status</span>
-				</div>
-				<div ng-repeat="player in playerList | reverse">
-					<span>{{player.name}}</span>
-					<span>{{player.basePrice}} Lakhs</span>
-					<span>{{player.currentPrice}} Lakhs</span>
-					<span>{{player.team}}</span>
-					<span>{{player.status}}</span>
-				</div>
-			</div>
-			<div id="Feeds" ng-if="feedsEnabled">
-				<div ng-repeat="player in playerList">
-					<p ng-if="player.status=='Sold'">
-						{{player.name}} is {{player.status}} to {{player.team}} for {{player.currentPrice}} Lakhs
-					</p>
-					<p ng-if="player.status=='Unsold'">
-						{{player.name}} remains {{player.status}}
-					</p>
-					<p ng-if="player.status=='Under the Hammer' && player.team">
-						{{player.team}} is bidding {{player.name}} for {{player.currentPrice}} Lakhs
-					</p>
-					<p ng-if="player.status=='Under the Hammer' && !player.team">
-						{{player.name}} is available for {{player.basePrice}} Lakhs
-					</p>
-				</div>
-			</div>
+	<div id="Contents">
+		<div id="LeftZone" ng-show="registered">
+			<div id="bid" ng-controller="BidController">
+				<ul id="messages"></ul>
+			    <div id="form" action="" ng-show="started">
+			    	<input ng-model="chatText" required/>
+			    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
+			    	<button ng-click="waitees()">Time Top-Up</button>
+			    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
+					<button ng-click="toggleModes()">{{toggleModeLabel}}</button>
+					<input ng-model="autoBidCap" type="number" min="200" max="1500" ng-disabled=!autoEnabled>
+					<button ng-click="makeAutoBid()" ng-disabled=!autoEnabled>Set</button>
+			    </div>
+			    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
+			</div>		
 		</div>
-		<div id="main" ng-controller="MainController">
-			<div  id="Registration" ng-show="!registered">
-				<input ng-model="userName" placeholder="{{registrationRequest}}"/></br>
-				<button ng-click="register()"> Register </button>
-			</div>
-			<div id="Display" ng-show="registered">
-				<div ng-if="currentPlayer" id="clock">
-					<h3>Time Left</h3>
-					<h1 ng-model="clock">{{clock}}</h1>
-					<h3 color="Green">Purse Left</h3>
-		    		<h3 id="Balance" color="Green">{{purseBalance}} Lakhs</h3>
-				</div>			
-				<div ng-if="currentPlayer" id="current">
-					<h3 align="center">Player Profile</h3>
-					<img ng-src="./images/players/{{currentPlayer.id}}.jpg">
-					<div>
-						<p>&nbsp; Name : {{currentPlayer.name}}</p>
-						<p>&nbsp; Base Price : {{currentPlayer.basePrice}} Lakhs</p>
-						<p>&nbsp; Age : {{currentPlayer.age}}</p>
-						<p>&nbsp; Country : {{currentPlayer.country}}</p>
-						<p>&nbsp; Role : {{currentPlayer.category}}</p>
+		<div id="MiddleZone">
+			<div id="list" ng-controller="ListController" ng-show="registered">
+				<button ng-click="toggleFeeds()">{{toggleLabel}}</button>
+				<div ng-if="!feedsEnabled">
+					<div id="ListTitle">
+						<span>Name</span>
+						<span>Base Price</span>
+						<span>Current Price</span>
+						<span>Team</span>
+						<span>Status</span>
 					</div>
-				</div>			
+					<div ng-repeat="player in playerList | reverse">
+						<span>{{player.name}}</span>
+						<span>{{player.basePrice}} Lakhs</span>
+						<span>{{player.currentPrice}} Lakhs</span>
+						<span>{{player.team}}</span>
+						<span>{{player.status}}</span>
+					</div>
+				</div>
+				<div id="Feeds" ng-if="feedsEnabled">
+					<div ng-repeat="player in playerList">
+						<p ng-if="player.status=='Sold'">
+							{{player.name}} is {{player.status}} to {{player.team}} for {{player.currentPrice}} Lakhs
+						</p>
+						<p ng-if="player.status=='Unsold'">
+							{{player.name}} remains {{player.status}}
+						</p>
+						<p ng-if="player.status=='Under the Hammer' && player.team">
+							{{player.team}} is bidding {{player.name}} for {{player.currentPrice}} Lakhs
+						</p>
+						<p ng-if="player.status=='Under the Hammer' && !player.team">
+							{{player.name}} is available for {{player.basePrice}} Lakhs
+						</p>
+					</div>
+				</div>
+			</div>
+			<div id="main" ng-controller="MainController">
+				<div  id="Registration" ng-show="!registered">
+					<input ng-model="userName" placeholder="{{registrationRequest}}"/>
+					<button ng-click="register()"> Register </button>
+				</div>
+				<div id="Display" ng-show="registered">
+					<div ng-if="currentPlayer" id="clock">
+						<h3>Time Left</h3>
+						<h1 ng-model="clock">{{clock}}</h1>
+						<h3 color="Green">Purse Left</h3>
+			    		<h3 id="Balance" color="Green">{{purseBalance}} Lakhs</h3>
+					</div>			
+					<div ng-if="currentPlayer" id="current">
+						<h3 align="center">Player Profile</h3>
+						<img ng-src="./images/players/{{currentPlayer.id}}.jpg">
+						<div>
+							<p>&nbsp; Name : {{currentPlayer.name}}</p>
+							<p>&nbsp; Base Price : {{currentPlayer.basePrice}} Lakhs</p>
+							<p>&nbsp; Age : {{currentPlayer.age}}</p>
+							<p>&nbsp; Country : {{currentPlayer.country}}</p>
+							<p>&nbsp; Role : {{currentPlayer.category}}</p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div id="RightZone" ng-show="registered">
-		<div ng-controller="StatsController">
-			<h1>My Team Stats</h1>
-			<div ng-repeat="(category, list) in myPlayers">
-				<ul>{{category}}
-					<li ng-repeat="player in list">{{player}}</li>
-				</ul>
+		<div id="RightZone" ng-show="registered">
+			<div ng-controller="StatsController">
+				<h1>My Team Stats</h1>
+				<div ng-repeat="(category, list) in myPlayers">
+					<ul>{{category}}
+						<li ng-repeat="player in list">{{player}}</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
