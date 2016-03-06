@@ -19,7 +19,7 @@
 			    <div id="form" action="" ng-show="started">
 			    	<input ng-model="chatText" required/>
 			    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
-			    	<button ng-click="waitees()">Time Top-Up</button>
+			    	<button ng-click="waitees()" ng-disabled="!currentBid">Time Top-Up</button>
 			    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
 					<button ng-click="toggleModes()">{{toggleModeLabel}}</button><br>
 					<input ng-model="autoBidCap" type="number" min="200" max="1500"  step="10" ng-disabled=!autoEnabled>

@@ -24,6 +24,7 @@
     background-image: url('../images/bg-blurred.jpg');
     background-repeat: no-repeat;
     background-size:cover;
+    opacity: 0.96;
   }
   #brand{
     text-align: center;
@@ -44,7 +45,6 @@
   }
   div#form {
     position: relative;
-    margin-top: 100px;
   }
   div#MiddleZone {
     float:left;
@@ -160,15 +160,16 @@
     margin: 0;
     padding: 0;
     overflow-y: auto;
-    height: 300px;
+    height: 400px;
   }
   #messages li {
     padding: 5px 10px;
     width: 100%;
     color: white;
+    word-wrap: break-word;
   }
   #messages li:nth-child(odd) {
-    background: #555;
+    background: rgba(2, 35, 89, 0.3);
   }
   input#m {
     width: 93%;
