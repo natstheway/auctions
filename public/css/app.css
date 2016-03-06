@@ -28,9 +28,13 @@
   #brand{
     text-align: center;
     font-size: 24px;
+    text-decoration: underline;
+    color: #011F51;
+    background-color: #F6FBFF;
+    text-shadow: 0 0 10px;
   }
   div#LeftZone {
-    width: 30%;
+    width: 25%;
     float: left;
     background-image: url('../images/chatbg1.jpg');
     background-repeat: no-repeat;
@@ -41,12 +45,11 @@
   }
   div#form {
     position: relative;
-    /* width: 30%; */
     margin-top: 100px;
   }
   div#MiddleZone {
     float:left;
-    width: 30%;
+    width: 40%;
     margin: 1%;
     min-height: 600px;
   }
@@ -55,7 +58,7 @@
   }
   div#RightZone {
     float:left;
-    width: 30%;
+    width: 25%;
     background-image: url('../images/playerlist.jpg');
     background-repeat: no-repeat;
     background-size:cover;    
@@ -79,6 +82,9 @@
     box-shadow: 0 0 50px;
     box-sizing: border-box;
     padding: 2em;
+  }
+  div#main #Registration input, div#main #Registration button {
+    width: 45%;
   }
   div#current {
     float: left;

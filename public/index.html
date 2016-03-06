@@ -21,8 +21,8 @@
 			    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
 			    	<button ng-click="waitees()">Time Top-Up</button>
 			    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
-					<button ng-click="toggleModes()">{{toggleModeLabel}}</button>
-					<input ng-model="autoBidCap" type="number" min="200" max="1500" ng-disabled=!autoEnabled>
+					<button ng-click="toggleModes()">{{toggleModeLabel}}</button><br>
+					<input ng-model="autoBidCap" type="number" min="200" max="1500"  step="10" ng-disabled=!autoEnabled>
 					<button ng-click="makeAutoBid()" ng-disabled=!autoEnabled>Set</button>
 			    </div>
 			    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
