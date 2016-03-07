@@ -12,6 +12,8 @@ var client = [];   // variable to store all the users logged in .. the list is u
 var clientSockets = {};
 var AUCTION_SIZE = 3;  // number of players to be in the auction group ..can be changed here..
 var AUCTION_TIME_LIMIT = 15000; // 15 seconds
+var SECRET_BID_TIME_LIMIT = 30000; // 30 seconds
+var SECRET_BID_TIME_LIMIT_SEC = 30;
 var AUCTION_TIME_LIMIT_SEC = 15; // 15 seconds
 var WAITEES_TIME_LIMIT = 30000; // 30 seconds
 var WAITEES_TIME_LIMIT_SEC = 30; // seconds
@@ -202,19 +204,36 @@ var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
       console.log("client " +name+ " purse left  is "+ getClientPurseLeft(name));
       if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold" && getClientPurseLeft(name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {    // starting the auction and showing the first player only after everyone joins
-        io.emit('bid message', name + ":" + msg);
-        playerList[currentPlayerIndex].currentPrice = msg;
-        playerList[currentPlayerIndex].team = name;
-        /**
-         * use socket.emit to reply to same user 
-         * use socket.broadcast.emit to reply to other users (apart from sent)
-         * use io.emit to send to everyone
-        **/
-        io.emit('player update', playerList[currentPlayerIndex]);
-        socket.broadcast.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
-        io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
-        setExpiration(socket,AUCTION_TIME_LIMIT);
-      }      
+        if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice)> 1000) {
+            console.log("Entering secret bid ***********");
+           io.emit('bid message', "Please enter your secret bids now. You have 30 seconds time.");
+           io.emit('secretbid message'); // updates the user to be able to send secret bids ..
+           io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
+           setExpiration(socket,SECRET_BID_TIME_LIMIT);
+        } else {
+           io.emit('bid message', name + ":" + msg);
+           playerList[currentPlayerIndex].currentPrice = msg;
+           playerList[currentPlayerIndex].team = name;
+           /**
+            * use socket.emit to reply to same user 
+            * use socket.broadcast.emit to reply to other users (apart from sent)
+            * use io.emit to send to everyone
+           **/
+            io.emit('player update', playerList[currentPlayerIndex]);
+            socket.broadcast.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
+            io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
+            setExpiration(socket,AUCTION_TIME_LIMIT);
+        }
+      }
+    });
+    socket.on('secretbid message',function(amount){
+        console.log("secretbid received from "+name+ " is "+amount);
+        io.emit('bid message',"SecretBid received from "+ name);
+        if(playerList[currentPlayerIndex].currentPrice < amount && getClientPurseLeft(name) >= amount)
+        {
+          playerList[currentPlayerIndex].currentPrice = amount;
+          playerList[currentPlayerIndex].team = name;
+        }
     });
     socket.on('autobid message',function(amount){
       console.log("autobid received amount is "+amount);
