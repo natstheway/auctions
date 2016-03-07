@@ -160,7 +160,7 @@
     margin: 0;
     padding: 0;
     overflow-y: auto;
-    height: 400px;
+    height: 380px;
   }
   #messages li {
     padding: 5px 10px;
