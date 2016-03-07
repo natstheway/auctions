@@ -21,8 +21,10 @@
 			    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
 			    	<button ng-click="waitees()" ng-disabled="!currentBid">Time Top-Up</button>
 			    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
+			    	<input ng-model="secretBid" type="number" min="1000" max="6000"  step="10" ng-disabled=!secretbiddingModeEnabled required/>
+					<button ng-click="makeSecretBid()" ng-disabled=!secretbiddingModeEnabled>SecretBid</button>
 					<button ng-click="toggleModes()">{{toggleModeLabel}}</button><br>
-					<input ng-model="autoBidCap" type="number" min="200" max="1500"  step="10" ng-disabled=!autoEnabled>
+					<input ng-model="autoBidCap" type="number" min="50" max="1000"  step="10" ng-disabled=!autoEnabled>
 					<button ng-click="makeAutoBid()" ng-disabled=!autoEnabled>Set</button>
 			    </div>
 			    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
