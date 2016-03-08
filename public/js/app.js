@@ -46,7 +46,7 @@ angular.module('app', ['socketFactory'])
 .controller('BidController', ['$scope', 'socket', function ($scope, $socket) {
 	$scope.toggleModeLabel = "Manual Bidding"
 	$scope.secretbiddingModeEnabled = false;
-	$scope.autoBidCap = 200;
+	$scope.autoBidCap = 0;
 	$scope.toggleModes = function () {
 		$scope.toggleModeLabel = $scope.toggleModeLabel == "Manual Bidding" ? "Auto bidding" : "Manual Bidding";
 		$scope.autoEnabled = !$scope.autoEnabled;
@@ -101,14 +101,14 @@ angular.module('app', ['socketFactory'])
 	});
 	$socket.$on('manual mode',function () {
 		$scope.toggleModeLabel = "Manual Bidding";
-		$scope.autoBidCap="";
+		$scope.autoBidCap= 0;
 		$scope.autoEnabled = false;
 	});
 	$socket.$on('secretbid message',function () {
 		$scope.secretbiddingModeEnabled = true;
 		$scope.currentBid = "";
 		$scope.toggleModeLabel = "Manual Bidding";
-		$scope.autoBidCap="";
+		$scope.autoBidCap= 0;
 		$scope.autoEnabled = false;
 
 	});
