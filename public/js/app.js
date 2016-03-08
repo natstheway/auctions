@@ -9,7 +9,7 @@ angular.module('app', ['socketFactory'])
 				$('#messages').children().remove();
 			}
 			if ($('#Sold Player Thread').length) {
-				$('#Sold Player Thread').animate({scrollTop: $('#messages').height()}, 500);
+				$('#Sold Player Thread').animate({scrollTop: 2 * $('#LeftZone').height()}, 500);
 			}
 		}
 		$scope.currentPlayer = msg;
@@ -86,11 +86,14 @@ angular.module('app', ['socketFactory'])
 	};
 	$socket.$on('bid message', function (msg) {
 		$('#messages').append($('<li>').text(msg));
-		$('#messages').animate({scrollTop: $('#messages').height()}, 500);
+		$('#messages').animate({scrollTop: 2 * $('#LeftZone').height()}, 500);
 	});
 	$socket.$on('chat message', function (msg) {
-		$('#messages').append($('<li>').text(msg));
-		$('#messages').animate({scrollTop: $('#messages').height()}, 500);
+		$('#messages').append($('<li class="chatMessage">').text(msg));
+		$('#messages').animate({scrollTop: 2 * $('#LeftZone').height()}, 500);
+	});
+	$socket.$on('waitees update', function (msg) {
+		$scope.waiteesLeft = msg;
 	});
 	$socket.$on('bid update', function (bid) {
 		if(bid <= 1000)
@@ -128,7 +131,7 @@ angular.module('app', ['socketFactory'])
 			$scope.$parent.myPlayers[data.category].push(data.name);
 		}
 		if ($scope.feedsEnabled) {
-			$('#Sold Player Thread').animate({scrollTop: $('#messages').height()}, 500);
+			$('#Feeds').animate({scrollTop: 2 * $('#Feeds').height()}, 500);
 		}
 	});
 }])

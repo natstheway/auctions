@@ -150,6 +150,7 @@ var setExpiration = function (socket,timeout) {
             // auto bid code -
             console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
             console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
+            
             if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {
               io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
               playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice);
@@ -270,6 +271,7 @@ var startAuction = function (socket, name) {
       if(getWaiteesAvailable(name) && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {
         deductWaiteesAvailable(name);
         io.emit('bid message', name + ": requested time top-up ");
+        socket.emit("waitees update", getWaiteesAvailable(name));
         io.emit("Timer Start", WAITEES_TIME_LIMIT_SEC);
         setExpiration(socket,WAITEES_TIME_LIMIT);
       }
@@ -291,6 +293,7 @@ io.on('connection', function(socket){
     client.push(getClientObj(name));
     clientSockets[name] = socket;
     socket.emit("purse balance", MAX_PURSE_AMOUNT);
+    socket.emit("waitees update", getWaiteesAvailable(name));
     if(client.length == AUCTION_SIZE) // welcome message before auction starts ..
       io.emit("LET THE BATTLE BEGIN");
     socket.on('disconnect', function(){
