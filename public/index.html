@@ -21,19 +21,11 @@
 			    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
 			    	<button ng-click="waitees()" ng-disabled="!currentBid || !waiteesLeft">Time Top-Up ({{waiteesLeft}})</button>
 			    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
-<<<<<<< Updated upstream
 			    	<input ng-model="secretBid" type="number" min="1000" max="6000"  step="10" ng-hide=!secretbiddingModeEnabled required/>
-				<button ng-click="makeSecretBid()" ng-hide=!secretbiddingModeEnabled>SecretBid</button>
-				<button ng-click="toggleModes()">{{toggleModeLabel}}</button><br>
-				<input ng-model="autoBidCap" type="range" min="50" max="1000" step="10" ng-hide="!autoEnabled">
-				<button ng-click="makeAutoBid()" ng-hide="!autoEnabled">Set {{autoBidCap}}</button>
-=======
-			    	<input ng-model="secretBid" type="number" min="1000" max="6000"  step="10" ng-disabled=!secretbiddingModeEnabled required/>
 					<button ng-click="makeSecretBid()" ng-disabled=!secretbiddingModeEnabled>SecretBid</button>
 					<button ng-click="toggleModes()">{{toggleModeLabel}}</button>
 					<button ng-click="makeAutoBid()" ng-hide="!autoEnabled">Set {{autoBidCap}}</button>
 					<input ng-model="autoBidCap" type="range" min="50" max="1000" step="10" ng-hide="!autoEnabled">
->>>>>>> Stashed changes
 			    </div>
 			    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
 			</div>		
