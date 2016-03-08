@@ -24,6 +24,7 @@ var MAX_WAITEES_PER_USER = 2; // maximum waitees that can be used up by the user
 var autobidList = [];
 var MANUAL_MODE = 0;
 var AUTOBID_MODE = 1;
+var secretBidMode = false;
 // finding objects by key value pair in JSON
 function getObjects(obj, key, val) {
     var objects = [];
@@ -148,10 +149,29 @@ var setExpiration = function (socket,timeout) {
           }
           if(playerList.length && element.name != playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
             // auto bid code -
-            console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
-            console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
-            
-            if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {
+            if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice && getNextBidAmount(playerList[currentPlayerIndex].currentPrice) <= 1000)) {
+              if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice) == 1000 && secretBidMode ==false) {
+                secretBidMode = true;
+                console.log("Entering secret bid ***********");
+                console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
+                console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
+                io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
+                playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice);
+                playerList[currentPlayerIndex].team = element.name;
+                io.emit('player update', playerList[currentPlayerIndex]);
+                io.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
+                io.emit('bid message', "Please enter your secret bids now. You have 30 seconds time.");
+                io.emit('secretbid message'); // updates the user to be able to send secret bids ..
+                //socket.emit('secretbid message');
+                //socket.broadcast.emit('secretbid message');
+                io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
+                clearAutoBidList();
+				clearTimeout(timer);
+                //setExpiration(socket,15000);
+
+              } else { 
+              console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
+              console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
               io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
               playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice);
               playerList[currentPlayerIndex].team = element.name;
@@ -159,6 +179,7 @@ var setExpiration = function (socket,timeout) {
               io.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
               io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
               clearTimeout(timer);
+			  }
             }else {
               // delete user from autobid list .. new autobid message will come if he increase the autobid value .. as of now , keeping him in the list is waste of space
               console.log("deleting "+element.name+" autobidList");
@@ -178,10 +199,17 @@ var setExpiration = function (socket,timeout) {
           // Updating the user purse balance, players purschased count and autobidlist
           clearAutoBidList();
           io.emit('manual mode');
+          io.emit('secretbid reset');
+          secretBidMode = false;
           clientPurchaseUpdate(playerList[currentPlayerIndex].name, playerList[currentPlayerIndex].team, playerList[currentPlayerIndex].currentPrice);
       } else {
         playerList[currentPlayerIndex].status = "Unsold";
         io.emit('bid message',  playerList[currentPlayerIndex].name + ' is unsold');
+        // Updating the user purse balance, players purschased count and autobidlist .. Not necessary..just simply doing..
+        clearAutoBidList();
+        io.emit('manual mode');
+        io.emit('secretbid reset');
+        secretBidMode = false;
       }
       io.emit('player update', playerList[currentPlayerIndex]);
       // Here a player bid is done ..give a 5 seconds gap !!!
@@ -205,8 +233,14 @@ var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
       console.log("client " +name+ " purse left  is "+ getClientPurseLeft(name));
       if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold" && getClientPurseLeft(name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice)) {    // starting the auction and showing the first player only after everyone joins
-        if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice)> 1000) {
-            console.log("Entering secret bid ***********");
+        if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice) == 1000 && secretBidMode == false) {
+           io.emit('bid message', name + ":" + msg);
+           playerList[currentPlayerIndex].currentPrice = msg;
+           playerList[currentPlayerIndex].team = name;
+           io.emit('player update', playerList[currentPlayerIndex]);
+           socket.broadcast.emit('bid update', msg);
+           secretBidMode = true;
+           console.log("Entering secret bid in startAuction ***********");
            io.emit('bid message', "Please enter your secret bids now. You have 30 seconds time.");
            io.emit('secretbid message'); // updates the user to be able to send secret bids ..
            io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
@@ -221,7 +255,7 @@ var startAuction = function (socket, name) {
             * use io.emit to send to everyone
            **/
             io.emit('player update', playerList[currentPlayerIndex]);
-            socket.broadcast.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
+            socket.broadcast.emit('bid update', msg);
             io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
             setExpiration(socket,AUCTION_TIME_LIMIT);
         }
