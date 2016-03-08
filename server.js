@@ -164,7 +164,7 @@ var setExpiration = function (socket,timeout) {
                 io.emit('secretbid message'); // updates the user to be able to send secret bids ..
                 //socket.emit('secretbid message');
                 //socket.broadcast.emit('secretbid message');
-                io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
+                io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
                 clearAutoBidList();
 				clearTimeout(timer);
                 //setExpiration(socket,15000);
@@ -243,8 +243,8 @@ var startAuction = function (socket, name) {
            console.log("Entering secret bid in startAuction ***********");
            io.emit('bid message', "Please enter your secret bids now. You have 30 seconds time.");
            io.emit('secretbid message'); // updates the user to be able to send secret bids ..
-           io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
-           setExpiration(socket,SECRET_BID_TIME_LIMIT);
+           io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
+           setExpiration(socket,AUCTION_TIME_LIMIT);
         } else {
            io.emit('bid message', name + ":" + msg);
            playerList[currentPlayerIndex].currentPrice = msg;
