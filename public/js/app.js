@@ -97,8 +97,7 @@ angular.module('app', ['socketFactory'])
 		$scope.waiteesLeft = msg;
 	});
 	$socket.$on('bid update', function (bid) {
-		if(bid <= 1000)
-			$scope.currentBid = bid;
+		$scope.currentBid = bid;
 	});
 	$socket.$on('manual mode',function () {
 		$scope.toggleModeLabel = "Manual Bidding";
