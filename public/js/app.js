@@ -46,6 +46,7 @@ angular.module('app', ['socketFactory'])
 .controller('BidController', ['$scope', 'socket', function ($scope, $socket) {
 	$scope.toggleModeLabel = "Manual Bidding"
 	$scope.secretbiddingModeEnabled = false;
+	$scope.autoBidCap = 200;
 	$scope.toggleModes = function () {
 		$scope.toggleModeLabel = $scope.toggleModeLabel == "Manual Bidding" ? "Auto bidding" : "Manual Bidding";
 		$scope.autoEnabled = !$scope.autoEnabled;
