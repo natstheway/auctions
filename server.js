@@ -98,10 +98,8 @@ function addToAutoBidList(name,amount) {
 }
 //
 function clearAutoBidList() {
-  // popping three times cause there can be maximum 3 bids now - since AUCTION_SIZE = 3 .. need to find a elegant way to do it..
-  autobidList.pop();
-  autobidList.pop();
-  autobidList.pop();
+  // clearing the autobidlist...
+  autobidList = [];
 }
 // number of autobids
 function getAutobidsAvailable() {
