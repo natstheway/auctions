@@ -99,6 +99,7 @@ function addToAutoBidList(name,amount) {
 //
 function clearAutoBidList() {
   // clearing the autobidlist...
+  autobidList.splice(0, autobidList.length);
   autobidList = [];
 }
 // number of autobids
@@ -132,7 +133,6 @@ var setExpiration = function (socket,timeout) {
           break;
         }
         // for every entry in the autobids list, we have to check for the below condition
-        //console.log("Autobids available");
         for(var i=0;i<autobidList.length;i++) {
           var element = autobidList[i];
           console.log(" checking autobid for "+ element.name);
@@ -147,12 +147,11 @@ var setExpiration = function (socket,timeout) {
           }
           if(playerList.length && element.name != playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
             // auto bid code -
-            if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice && getNextBidAmount(playerList[currentPlayerIndex].currentPrice) <= 1000)) {
+            if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice) && getNextBidAmount(playerList[currentPlayerIndex].currentPrice) <= 1000) {
               if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice) == 1000 && secretBidMode ==false) {
                 secretBidMode = true;
-                console.log("Entering secret bid ***********");
-                console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
-                console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
+                //console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
+                //console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
                 io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
                 playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice);
                 playerList[currentPlayerIndex].team = element.name;
@@ -164,7 +163,6 @@ var setExpiration = function (socket,timeout) {
                 clearAutoBidList();
 		clearTimeout(timer);
 		timeout = SECRET_BID_TIME_LIMIT;
-                //setExpiration(socket,15000);
               } else { 
                 console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice));
                 console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
@@ -192,20 +190,20 @@ var setExpiration = function (socket,timeout) {
       if (playerList[currentPlayerIndex].team) {
          playerList[currentPlayerIndex].status = "Sold";
          io.emit('bid message',  playerList[currentPlayerIndex].name + ' sold to ' + playerList[currentPlayerIndex].team);
-          // Updating the user purse balance, players purschased count and autobidlist
-          clearAutoBidList();
-          io.emit('manual mode');
-          io.emit('secretbid reset');
-          secretBidMode = false;
-          clientPurchaseUpdate(playerList[currentPlayerIndex].name, playerList[currentPlayerIndex].team, playerList[currentPlayerIndex].currentPrice);
+         // Updating the user purse balance, players purschased count and autobidlist
+         clearAutoBidList();
+         io.emit('manual mode');
+         io.emit('secretbid reset');
+         secretBidMode = false;
+         clientPurchaseUpdate(playerList[currentPlayerIndex].name, playerList[currentPlayerIndex].team, playerList[currentPlayerIndex].currentPrice);
       } else {
-        playerList[currentPlayerIndex].status = "Unsold";
-        io.emit('bid message',  playerList[currentPlayerIndex].name + ' is unsold');
-        // Updating the user purse balance, players purschased count and autobidlist .. Not necessary..just simply doing..
-        clearAutoBidList();
-        io.emit('manual mode');
-        io.emit('secretbid reset');
-        secretBidMode = false;
+         playerList[currentPlayerIndex].status = "Unsold";
+         io.emit('bid message',  playerList[currentPlayerIndex].name + ' is unsold');
+         // Updating the user purse balance, players purschased count and autobidlist .. Not necessary..just simply doing..
+         clearAutoBidList();
+         io.emit('manual mode');
+         io.emit('secretbid reset');
+         secretBidMode = false;
       }
       io.emit('player update', playerList[currentPlayerIndex]);
       // Here a player bid is done ..give a 5 seconds gap !!!
