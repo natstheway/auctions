@@ -2,10 +2,12 @@
 <html>
 <head>
 	<title>Auctions</title>
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="./css/app.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="text/javascript" src="./libs/angular.min.js"></script>
 	<script type="text/javascript" src="./libs/jQuery.js"></script>
+	<script type="text/javascript" src="./libs/bootstrap.min.js"></script>
 	<script type="text/javascript" src="./libs/socket.io.js"></script>
 	<script type="text/javascript" src="./js/socketFactory.js"></script>
 	<script type="text/javascript" src="./js/app.js"></script>
@@ -15,6 +17,8 @@
 	<div id="Contents">
 		<div id="LeftZone" ng-show="registered">
 			<div id="bid" ng-controller="BidController">
+				<p class="welcomeMsg">Welcome, {{userName}}</p>
+				<img id="OnlineUsers" src="./images/users.png"></img>
 				<ul id="messages"></ul>
 			    <div id="form" action="" ng-show="started">
 			    	<input ng-model="chatText" required/>

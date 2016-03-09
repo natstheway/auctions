@@ -313,6 +313,7 @@ io.on('connection', function(socket){
     io.emit('bid message', name + ' : connected');
     client.push(getClientObj(name));
     clientSockets[name] = socket;
+    io.emit("online users", Object.keys(clientSockets));
     socket.emit("purse balance", MAX_PURSE_AMOUNT);
     socket.emit("waitees update", getWaiteesAvailable(name));
     if(client.length == AUCTION_SIZE) // welcome message before auction starts ..
@@ -322,6 +323,7 @@ io.on('connection', function(socket){
       deleteFromClientList(name);
       clientSockets[name] = null;
       delete clientSockets[name];
+      io.emit("online users", Object.keys(clientSockets));
     });
     socket.on('start auction', function () {
       startAuction(socket, name); // start auction for all here ...

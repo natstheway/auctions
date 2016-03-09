@@ -32,6 +32,7 @@
     color: #011F51;
     background-color: #F6FBFF;
     text-shadow: 0 0 10px;
+    margin: 0;
   }
   div#LeftZone {
     width: 27%;
@@ -113,7 +114,6 @@
     width:100px;
   }
   div#bid {
-    margin-top: 20px;
     width: 100%;
   }
   div#list {
@@ -219,6 +219,28 @@
     font-style: italic;
     font-family: cursive;
   }
+  #LeftZone .welcomeMsg {
+    color: white;
+    font-size: 20px;
+    display: inline-block;
+    height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+  #LeftZone #OnlineUsers {
+    height: 30px;
+    float: right;
+    box-shadow: 2px 2px 10px;
+  }
+  #LeftZone .popover-content {
+    white-space: pre;
+    background-color: rgba(139, 195, 74, 0.4);
+  }
+  #LeftZone .popover-title {
+    background-color: rgba(76, 175, 80, 0.73);
+  }
   input[type=range], input[type=range]:focus{
     -webkit-appearance: none;
     background: transparent;
@@ -243,4 +265,8 @@
   }
   input[type=range]::-webkit-slider-thumb:foucs {
     border: none;
+  }
+  button:disabled {
+    background-color: #DAD8D8;
+    color: #B3A1A1;
   }

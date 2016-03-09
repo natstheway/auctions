@@ -110,11 +110,24 @@ angular.module('app', ['socketFactory'])
 		$scope.toggleModeLabel = "Manual Bidding";
 		$scope.autoBidCap= 0;
 		$scope.autoEnabled = false;
-
 	});
 	$socket.$on('secretbid reset',function () {
 		$scope.secretbiddingModeEnabled = false;
 		$scope.secretBid="";
+	});
+	$socket.$on('online users',function (userList) {
+		var popover = $('#OnlineUsers').data('bs.popover');
+		if (!popover) {
+			$("#OnlineUsers").popover("destroy").popover( {
+				title : "Online Users",
+				content : userList.join("\r\n")
+			});
+		} else {			
+			popover.options.content = userList.join("\r\n");
+		}
+	});
+	$("#OnlineUsers").popover( {
+		title : "Online Users"
 	});
 }])
 .controller('ListController', ['$scope', 'socket', function ($scope, $socket) {
