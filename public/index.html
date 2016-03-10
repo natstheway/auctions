@@ -22,16 +22,16 @@
 				<ul id="messages"></ul>
 			    <div id="form" action="" ng-show="started">
 			    	<input ng-model="chatText" required/>
-			    	<button ng-click="chat()" ng-disabled="!chatText">Chat</button>
-			    	<button ng-click="waitees()" ng-disabled="!currentBid || !waiteesLeft">Time Top-Up ({{waiteesLeft}})</button>
-			    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}}</button>
+			    	<button ng-click="chat()" ng-disabled="!chatText">Chat<img src="./images/chat.png"/></button>
+			    	<button ng-click="waitees()" ng-disabled="!currentBid || !waiteesLeft">Time Top-Up ({{waiteesLeft}})<img src="./images/waitees.png"/></button>
+			    	<button ng-click="makeBid()" ng-disabled="!currentBid">Bid {{currentBid}} <img src="./images/bid.png"/></button>
 			    	<input ng-model="secretBid" type="number" min="1000" max="6000"  step="10" ng-hide=!secretbiddingModeEnabled required/>
-					<button ng-click="makeSecretBid()" ng-disabled=!secretbiddingModeEnabled>Secret Bid</button><br>
-					<button ng-click="toggleModes()">{{toggleModeLabel}}</button>
-					<button ng-click="makeAutoBid()" ng-hide="!autoEnabled">Set {{autoBidCap}}</button>
+					<button ng-click="makeSecretBid()" ng-disabled=!secretbiddingModeEnabled>Secret Bid <img src="./images/secret.png"/></button><br>
+					<button ng-click="toggleModes()">{{toggleModeLabel}} <img ng-src="./images/{{toggleModeLabel}}.png"/></button>
+					<button ng-click="makeAutoBid()" ng-hide="!autoEnabled">Set {{autoBidCap}} <img ng-src="./images/set.png"/></button>
 					<input ng-model="autoBidCap" type="range" min="50" max="1000" step="10" ng-hide="!autoEnabled">
 			    </div>
-			    <button ng-click="startAuction()" ng-show="registered && !started">Join</button>
+			    <button ng-click="startAuction()" ng-show="registered && !started">Join <img src="./images/join.png"/></button>
 			</div>		
 		</div>
 		<div id="MiddleZone">
@@ -73,7 +73,7 @@
 			<div id="main" ng-controller="MainController">
 				<div  id="Registration" ng-show="!registered">
 					<input ng-model="userName" placeholder="{{registrationRequest}}"/>
-					<button ng-click="register()"> Register </button>
+					<button ng-click="register()"> Register <img src="./images/register.png"/></button>
 				</div>
 				<div id="Display" ng-show="registered">
 					<div ng-if="currentPlayer" id="clock">

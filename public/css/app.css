@@ -170,6 +170,19 @@
     margin: 1%;
     box-shadow: 0 0  10px 1px black;
   }
+  button:disabled {
+    background-color: #DAD8D8;
+    color: #B3A1A1;
+    box-shadow: none;
+  }
+  button:active {
+    box-shadow: none;
+    background-color: rgb(183, 233, 249);
+  }
+  div button img {
+    height: 20px;
+    float: right;
+  }
   #messages {
     list-style-type: none;
     margin: 0;
@@ -269,12 +282,4 @@
   }
   input[type=range]::-webkit-slider-thumb:foucs {
     border: none;
-  }
-  button:disabled {
-    background-color: #DAD8D8;
-    color: #B3A1A1;
-  }
-  button:active {
-    box-shadow: none;
-    background-color: rgb(183, 233, 249);
   }
