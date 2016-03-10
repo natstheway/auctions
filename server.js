@@ -76,7 +76,7 @@ function getWaiteesAvailable(name) {
   /**
    * Need to define message interfaces and layout in ui to display this information
   **/
-  return tempUser.waiteesAvailable;
+  return tempUser ? tempUser.waiteesAvailable : 0;
 }
 // delete a entry from autobid list
 function deleteFromAutoBidList(name) {
