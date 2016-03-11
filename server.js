@@ -22,9 +22,9 @@ var MAX_PURSE_AMOUNT = 2000; // 2000 Lakhs .. change later
 var MAX_WAITEES_PER_USER = 2; // maximum waitees that can be used up by the user
 // Autobid variables 
 var autobidList = [];
-var MANUAL_MODE = 0;
-var AUTOBID_MODE = 1;
 var secretBidMode = false;
+// Normal Bidding limit is the limit upto which user can do manual/auto bidding.. after that it goes to super bidding
+var NORMAL_BID_LIMIT = 1000; 
 // finding objects by key value pair in JSON
 function getObjects(obj, key, val) {
     var objects = [];
@@ -124,67 +124,81 @@ function deleteFromClientList(name) {
     client.splice(client.indexOf(getObjects(client, "name", name)[0]), 1);
 }
 
-var setExpiration = function (socket,timeout) {
-
-    var exitAutobid = false;
-    // check for autobid possibility before clearing timeout .. if so, start autobidding..
-      while(getAutobidsAvailable()) {
-        console.log("autobids available : "+getAutobidsAvailable())
-        if(exitAutobid == true || secretBidMode == true ) {
-          // based on inputs from for loop
-          break;
-        }
-        // for every entry in the autobids list, we have to check for the below condition
-        for(var i=0;i<autobidList.length;i++) {
-          var element = autobidList[i];
-          console.log(" checking autobid for "+ element.name);
-          // if there is only one guy in autobid list and he is the current bidder for the player, then no need to enter this loop...you can quit the while loop also
-          if(element.name == playerList[currentPlayerIndex].team && getAutobidsAvailable() == 1) {
-            //exiting from autobidding temporarily... wait for other bidders or autobidders
-            exitAutobid = true;
-            break;
-          } else if(element.name == playerList[currentPlayerIndex].team) {
-            // need to check for other players in the autobid list
-            continue;
+var Autobid = function (socket,timeout) {
+// body...
+var exitAutobid = false;
+while(getAutobidsAvailable()) {
+  // if it is in secretbid, or if there is no possible autobid now or if there are no players to autobid, then please quit this function
+  //console.log("autobids available : "+getAutobidsAvailable())
+  if(exitAutobid == true || secretBidMode == true ||  playerList.length == 0) {
+      break;
+    }
+    // for every entry in the autobids list, we have to check for the below condition
+    for(var i=0;i<autobidList.length;i++) {
+      var element = autobidList[i];
+      //console.log(" checking autobid for "+ element.name);
+      // if there is only one guy in autobid list and he is the current bidder for the player, then no need to enter this loop...you can quit the while loop also
+      if(element.name == playerList[currentPlayerIndex].team && getAutobidsAvailable() == 1) {
+        //exiting from autobidding temporarily... wait for other bidders or autobidders
+        exitAutobid = true;
+        break;
+      } else if(element.name == playerList[currentPlayerIndex].team) {
+        // need to check for other players in the autobid list
+        continue;
+      }
+      // Now we know that we are looking at a person who does not hold the player, and want to bid ...so check for the following conditions
+      /*
+      * 1) Check if he is still under the hammer 
+      */
+      if(playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
+        // auto bid code -
+        // check for the following
+        /*
+        * 1) if the current bid amount is below the autobid amount which the user has set for this player
+        * 2) if the user has enough purse to buy it
+        * 3) if the current bid is not greater than 10c.. if its 10c, then secret bid needs to be enabled.
+        */
+        if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) && getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) <= NORMAL_BID_LIMIT) {
+          // checking if the amount has reached 10c and it is not already in secret bidding,then enable secret bidding
+          if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) == NORMAL_BID_LIMIT && secretBidMode ==false) {
+            secretBidMode = true;
+            //console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
+            //console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
+            io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
+            playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice);
+            playerList[currentPlayerIndex].team = element.name;
+            io.emit('player update', playerList[currentPlayerIndex]);
+            io.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
+            io.emit('bid message', "Please enter your secret bids now. You have "+ SECRET_BID_TIME_LIMIT_SEC+" seconds time.");
+            io.emit('secretbid message'); // updates the user to be able to send secret bids ..
+            io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
+            clearAutoBidList();
+            clearTimeout(timer);
+            timeout = SECRET_BID_TIME_LIMIT;
+          } else { 
+            //console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
+            //console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
+            io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
+            playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice);
+            playerList[currentPlayerIndex].team = element.name;
+            io.emit('player update', playerList[currentPlayerIndex]);
+            io.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
+            io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
+            clearTimeout(timer);
           }
-          if(playerList.length && element.name != playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold") {    // starting the auction and showing the first player only after everyone joins
-            // auto bid code -
-            if(element.amount >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) && getClientPurseLeft(element.name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) && getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) <= 1000) {
-              if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) == 1000 && secretBidMode ==false) {
-                secretBidMode = true;
-                //console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
-                //console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
-                io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
-                playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice);
-                playerList[currentPlayerIndex].team = element.name;
-                io.emit('player update', playerList[currentPlayerIndex]);
-                io.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
-                io.emit('bid message', "Please enter your secret bids now. You have "+ SECRET_BID_TIME_LIMIT_SEC+" seconds time.");
-                io.emit('secretbid message'); // updates the user to be able to send secret bids ..
-                io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
-                clearAutoBidList();
-		clearTimeout(timer);
-		timeout = SECRET_BID_TIME_LIMIT;
-              } else { 
-                console.log(element.name + " auto-bidding for "+getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
-                console.log(element.name + "purse left is "+ getClientPurseLeft(element.name));
-                io.emit('bid message', element.name + ":" + getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
-                playerList[currentPlayerIndex].currentPrice = getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice);
-                playerList[currentPlayerIndex].team = element.name;
-        	io.emit('player update', playerList[currentPlayerIndex]);
-	        io.emit('bid update', getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice));
-              	io.emit("Timer Start", AUCTION_TIME_LIMIT_SEC);
-              	clearTimeout(timer);
-		}
-            }else {
-              // delete user from autobid list .. new autobid message will come if he increase the autobid value .. as of now , keeping him in the list is waste of space
-              console.log("deleting "+element.name+" autobidList");
-              deleteFromAutoBidList(element.name);
-            }
-          }
+        }else {
+          // delete user from autobid list .. new autobid message will come if he increase the autobid value .. as of now , keeping him in the list is waste of space
+          console.log("deleting "+element.name+" autobidList");
+          deleteFromAutoBidList(element.name);
         }
       }
-
+    }
+  }
+}
+var setExpiration = function (socket,timeout) {
+  Autobid(socket,timeout);
+  if(secretBidMode) // updating timeout for secret bid  .. this is for the case when secret bid happens through autobid.. 
+    timeout = SECRET_BID_TIME_LIMIT;
   clearTimeout(timer);
   timer = setTimeout(function () {
     if(client.length == AUCTION_SIZE) {  // setting timers only when all the participants are in !!
@@ -228,8 +242,21 @@ var setExpiration = function (socket,timeout) {
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
       console.log("client " +name+ " purse left  is "+ getClientPurseLeft(name));
+      // checks for bidding
+      /**
+      * 1) if all users are present for the auctions
+      * 2) if the bid for the player is already not with the current user
+      * 3) if the player is "Under the hammer"
+      * 4) if the user has enuf purse left to buy the player
+      **/
       if(client.length == AUCTION_SIZE && playerList.length && name !=  playerList[currentPlayerIndex].team && playerList[currentPlayerIndex].status != "Sold" && playerList[currentPlayerIndex].status != "Unsold" && getClientPurseLeft(name) >= getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice)) {    // starting the auction and showing the first player only after everyone joins
-        if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) == 1000 && secretBidMode == false) {
+        // checking if we can opt for secret bid 
+        /** 
+        * 1) checking if the user has bid for 10c (limit for starting secret bid)
+        * 2) checking if it is not already in secret bid
+        **/
+        // if either of the above conditions are not met, then we don't have to invoke secret bid, go on with regular bidding
+        if(getNextBidAmount(playerList[currentPlayerIndex].currentPrice,playerList[currentPlayerIndex].basePrice) == NORMAL_BID_LIMIT && secretBidMode == false) {
            io.emit('bid message', name + ":" + msg);
            playerList[currentPlayerIndex].currentPrice = msg;
            playerList[currentPlayerIndex].team = name;
@@ -240,7 +267,8 @@ var startAuction = function (socket, name) {
            io.emit('secretbid message'); // updates the user to be able to send secret bids ..
            io.emit("Timer Start", SECRET_BID_TIME_LIMIT_SEC);
            setExpiration(socket,SECRET_BID_TIME_LIMIT);
-        } else {
+        } 
+        else {
            io.emit('bid message', name + ":" + msg);
            playerList[currentPlayerIndex].currentPrice = msg;
            playerList[currentPlayerIndex].team = name;
