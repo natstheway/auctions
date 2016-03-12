@@ -38,7 +38,7 @@ function getObjects(obj, key, val) {
     }
     return objects;
 }
-// User Profile Init
+/********************* OPERATIONS ON CLIENT OBJECT ************************/
 function getClientObj(name) {
     return  {
         "name": name,
@@ -53,6 +53,24 @@ function getClientPurseLeft(name){
   var tempUser = getObjects(client,"name", name)[0];
   return tempUser.purseBalance;
 }
+// get the number of players purchased by the client
+function getClientPurchasedCount(name) {
+  var tempUser = getObjects(client,"name", name)[0];
+  return tempUser.playersPurschasedCount;
+}
+// getting user profile - waitees available
+function getWaiteesAvailable(name) {
+  var tempUser = getObjects(client,"name", name)[0];
+  /**
+   * Need to define message interfaces and layout in ui to display this information
+  **/
+  return tempUser ? tempUser.waiteesAvailable : 0;
+}
+// updating user profile - waitees available
+function deductWaiteesAvailable(name) {
+  var tempUser = getObjects(client,"name", name)[0];
+  tempUser.waiteesAvailable = tempUser.waiteesAvailable - 1;
+}
 // updating user ( client ) profile after purchase
 function clientPurchaseUpdate(name, team, currentPrice) {
   var tempUser = getObjects(client,"name", team)[0];
@@ -65,19 +83,24 @@ function clientPurchaseUpdate(name, team, currentPrice) {
   clientSockets[team].emit("purse balance", tempUser.purseBalance);
   return tempUser;
 }
-// updating user profile - waitees available
-function deductWaiteesAvailable(name) {
-  var tempUser = getObjects(client,"name", name)[0];
-  tempUser.waiteesAvailable = tempUser.waiteesAvailable - 1;
+// delete user on exit
+function deleteFromClientList(name) {
+  var objects = getObjects(client, "name", name);
+  if(objects.length)
+    client.splice(client.indexOf(getObjects(client, "name", name)[0]), 1);
 }
-// getting user profile - waitees available
-function getWaiteesAvailable(name) {
-  var tempUser = getObjects(client,"name", name)[0];
-  /**
-   * Need to define message interfaces and layout in ui to display this information
-  **/
-  return tempUser ? tempUser.waiteesAvailable : 0;
+// get the next bid amount based on the current amount
+function getNextBidAmount(currentPrice,basePrice) {
+  if(currentPrice == "")
+    return basePrice;
+  // need to changed based on auction rules
+  if(currentPrice <=480)
+    return currentPrice+20;
+  else if(currentPrice > 480)
+    return currentPrice + 25;
+
 }
+/************************ AUTOBID OPERATIONS ***************************/
 // delete a entry from autobid list
 function deleteFromAutoBidList(name) {
   // deleting only if there any objects with the particular name .. otherwise it is deleting random element
@@ -106,24 +129,7 @@ function clearAutoBidList() {
 function getAutobidsAvailable() {
   return autobidList.length;
 }
-// get the next bid amount based on the current amount
-function getNextBidAmount(currentPrice,basePrice) {
-  if(currentPrice == "")
-    return basePrice;
-  // need to changed based on auction rules
-  if(currentPrice <=480)
-    return currentPrice+20;
-  else if(currentPrice > 480)
-    return currentPrice + 25;
-
-}
-// delete user on exit
-function deleteFromClientList(name) {
-  var objects = getObjects(client, "name", name);
-  if(objects.length)
-    client.splice(client.indexOf(getObjects(client, "name", name)[0]), 1);
-}
-
+// Main autobid function 
 var Autobid = function (socket,timeout) {
 // body...
 var exitAutobid = false;
@@ -195,6 +201,8 @@ while(getAutobidsAvailable()) {
     }
   }
 }
+/*************** Auction support functions  *********************/
+// set the timers expiry to 'timeout' and executes callback upon timer expiry
 var setExpiration = function (socket,timeout) {
   Autobid(socket,timeout);
   if(secretBidMode) // updating timeout for secret bid  .. this is for the case when secret bid happens through autobid.. 
@@ -239,6 +247,7 @@ var setExpiration = function (socket,timeout) {
     }
   }, timeout);  
 };
+// This function handles the auction related socket messages
 var startAuction = function (socket, name) {
     socket.on('bid message', function(msg){
       console.log("client " +name+ " purse left  is "+ getClientPurseLeft(name));
