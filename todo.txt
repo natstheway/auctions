@@ -1,6 +1,20 @@
 ### TO-DO ####
 
-#### Action Items #######
+To add support for 
+1) Multiple groups ( 16) with multiple users(4-5) in each of those. Make suitable design changes for their login and registration as well.
+2) Intra-group chat
+3) Increase the player database. Currently only 5. Get data and add.
+4) Improving auction scheduling functionality
+	Currently the auction starts when all the users join. We need to make the server consider time as a parameter.
+
+Post-Auction stuff :
+5) Buying from Unsold list.
+6) Support player transfers after auctions.
+7) Replacing injured player with new player during the games.
+
+
+
+#### Completed stuff(*) #######
 
 1. Update prayer profile ( player.js ) to have following fields :
 	-id
@@ -25,7 +39,7 @@
 
 3. Online Team list - 
 
-	STATUS : Data available in the server code.. Need to see where to display it.
+	STATUS : Completed.
 		
 4. Page Layout with Player related details, Auction Feeds , and others based on Layout.jpeg
 	The layout.jpg has been updated..
@@ -39,13 +53,29 @@
 
 	STATUS : Completed.
 	
+6. Secret bidding support added -
+ 	Added secret bidding support. For all bids above 10c, secret bidding will be used.
+ 	Manual/Auto bidding will be disabled.
+ 	Secret bidding now selects the winner based on two criterias - 
+ 	     a) highest bid amount
+ 	     b) quickest bid
+ 	If two secret bid amounts(a) clash, (b) first one to send the bid will be announced the winner.
+ 	So, be really quick !
+ 	
+ 	STATUS : Completed.
+ 	
+
+
 Features completed :
+
 1. Chat Support - DONE
 2. Waitees - DONE
 3. Money Spent - DONE
 4. Disable Repeated Bids by same player - DONE
 5. 5 sec break between bids - DONE
 6. "Autobidding" Mode - DONE
+7. Secret bidding - DONE
+8. User stats panel - DONE
 
 ##### Code Cleanups #####
 
