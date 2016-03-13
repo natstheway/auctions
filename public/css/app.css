@@ -88,6 +88,7 @@
   }
   div#main #Registration input, div#main #Registration button {
     width: 45%;
+    height: 45px;
   }
   div#current {
     float: left;
@@ -180,7 +181,7 @@
     background-color: rgb(183, 233, 249);
   }
   div button img {
-    height: 20px;
+    height: 16px;
     float: right;
   }
   #messages {
