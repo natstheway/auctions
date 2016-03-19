@@ -301,6 +301,6 @@ io.on('connection', function(socket){
 app.get('/', function (req, res) {
   res.sendFile('index.html', { root: path.join(__dirname, '/public') })
 });
-http.listen(8000, function () {
-  console.log('Example app listening on port 8000!');
+http.listen(process.env.PORT || 8000, function () {
+  console.log('Example app listening on port 8000 ! and '+process.env.PORT+ ' ports');
 });
